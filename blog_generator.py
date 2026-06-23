@@ -13,9 +13,9 @@ BLOG_CSV_URL = "https://docs.google.com/spreadsheets/d/1PNIvLQsoyh6ssc5wEvtmB4K8
 APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwn9irH9UZbvX6b25lctzMIPeorl2926QLUfnwO_SxrOy3CnMCG5gtEH-OpSmjhpS5kw/exec"
 LOCAL_CSV_PATH = "blog_content.csv"
 
-LINKEDIN_ACCESS_TOKEN = os.environ.get("LINKEDIN_ACCESS_TOKEN", "").strip() if os.environ.get("LINKEDIN_ACCESS_TOKEN") else None
-LINKEDIN_AUTHOR_URN = os.environ.get("LINKEDIN_AUTHOR_URN", "").strip() if os.environ.get("LINKEDIN_AUTHOR_URN") else None
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip() if os.environ.get("GEMINI_API_KEY") else None
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip() or None
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "").strip() or None
 
 TEMPLATE_PATH = "article_template.html"
 ARTICLES_DIR = "articles"
@@ -73,109 +73,19 @@ def generate_article(row, template):
     print(f"Generated: {filepath}")
     return {"title": title, "slug": slug, "date": date, "excerpt": excerpt, "category": category}
 
-def generate_linkedin_post(content, article_url):
-    if not GEMINI_API_KEY:
-        print("GEMINI_API_KEY not found. Skipping LinkedIn summary generation.")
-        return None
-        
-    prompt = f"""
-Read the following article and summarize it into an engaging LinkedIn post (between 100 to 150 words maximum to avoid LinkedIn UGC post character limits).
-IMPORTANT: THE LINKEDIN POST MUST BE WRITTEN ENTIRELY IN ENGLISH.
-Use a professional tone, add a hook (an attention-grabbing first line), and highlight the key points of the article in an interesting way that encourages the reader to read the full article.
-CRITICAL NOTE: Do NOT use any Markdown formatting (such as ** for bold or dashes), just plain text and new lines, as LinkedIn does not support it natively.
-Add enough spaces and paragraph breaks to make it easy to read, and add appropriate hashtags at the end.
-At the end of the post, write a call to action inviting the reader to check the full details via the link.
-
-Article:
-{content}
-"""
-    models_to_try = [
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-pro"
-    ]
-    
-    last_error = None
-    for model in models_to_try:
-        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
-        payload = {
-            "contents": [{"parts": [{"text": prompt}]}]
-        }
-        
-        try:
-            response = requests.post(api_url, headers={"Content-Type": "application/json"}, json=payload, timeout=60)
-            if response.status_code != 200:
-                print(f"Gemini API Error with {model}:", response.text)
-                last_error = response.text
-                continue # Try next model
-                
-            data = response.json()
-            if "candidates" in data and len(data["candidates"]) > 0:
-                generated_text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-                # Append link
-                final_post = generated_text + f"\n\n🔗 Read the full article here:\n{article_url}"
-                print("Successfully generated LinkedIn post via Gemini.")
-                return final_post
-        except Exception as e:
-            print(f"Error generating LinkedIn summary with {model}: {e}")
-            last_error = str(e)
-            continue
-            
-    print("All Gemini models failed. Last error:", last_error)
-    return None
-
-def publish_to_linkedin(text, article_url):
-    if not LINKEDIN_ACCESS_TOKEN or not LINKEDIN_AUTHOR_URN:
-        print("LinkedIn credentials not found. Skipping publishing.")
-        return False
-        
-    url = "https://api.linkedin.com/v2/ugcPosts"
-    headers = {
-        "Authorization": f"Bearer {LINKEDIN_ACCESS_TOKEN}",
-        "Content-Type": "application/json",
-        "X-Restli-Protocol-Version": "2.0.0"
-    }
-    
-    # User URN format must be urn:li:person:XXXXXX
-    author = LINKEDIN_AUTHOR_URN
-    if not author.startswith("urn:li:person:"):
-        author = f"urn:li:person:{author}"
-        
-    payload = {
-        "author": author,
-        "lifecycleState": "PUBLISHED",
-        "specificContent": {
-            "com.linkedin.ugc.ShareContent": {
-                "shareCommentary": {
-                    "text": text
-                },
-                "shareMediaCategory": "ARTICLE",
-                "media": [
-                    {
-                        "status": "READY",
-                        "description": {"text": "Read the full article"},
-                        "originalUrl": article_url
-                    }
-                ]
-            }
-        },
-        "visibility": {
-            "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-        }
-    }
-    
+def send_telegram_message(text):
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        return
     try:
-        response = requests.post(url, headers=headers, json=payload, timeout=30)
-        if response.status_code == 201:
-            print("Successfully published to LinkedIn!")
-            return True
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}
+        resp = requests.post(url, json=payload, timeout=15)
+        if resp.status_code == 200:
+            print("Telegram notification sent.")
         else:
-            print(f"Failed to publish to LinkedIn. Status Code: {response.status_code}")
-            print(f"Response: {response.text}")
-            return False
+            print(f"Telegram send failed: {resp.text}")
     except Exception as e:
-        print(f"Error publishing to LinkedIn: {e}")
-        return False
+        print(f"Telegram error: {e}")
 
 def update_index(articles):
     if not os.path.exists(INDEX_PATH):
@@ -247,19 +157,6 @@ def main():
                 if art:
                     articles_data.append(art)
                     
-                    # --- Generate and Publish to LinkedIn ---
-                    try:
-                        full_content = row[6] # Index 6 is the Content based on generate_article mapping
-                        article_url = f"https://domanid.com/articles/{art['slug']}.html"
-                        print("Generating LinkedIn summary via AI...")
-                        linkedin_post = generate_linkedin_post(full_content, article_url)
-                        if linkedin_post:
-                            print("Publishing to LinkedIn...")
-                            publish_to_linkedin(linkedin_post, article_url)
-                    except Exception as linkedin_error:
-                        print(f"Non-critical Error during LinkedIn publishing: {linkedin_error}")
-                    # ---------------------------------------
-                    
                     if APPS_SCRIPT_URL:
                         sheet_row = i + 1
                         try:
@@ -294,9 +191,23 @@ def main():
             all_posted_articles.reverse() # SORT: LATEST FIRST
             update_index(all_posted_articles)
 
+        if articles_data:
+            art = articles_data[-1]
+            msg = (
+                f"✅ <b>Article Published Successfully</b>\n\n"
+                f"📄 <b>{art['title']}</b>\n"
+                f"📅 {art['date']}  |  📂 {art['category']}\n"
+                f"🔗 https://domanid.com/articles/{art['slug']}.html"
+            )
+            send_telegram_message(msg)
+        else:
+            send_telegram_message("✅ <b>Blog Check Complete</b>\nNo pending articles to publish.")
+
     except Exception as e:
         print("--- CRITICAL ERROR ---")
         traceback.print_exc()
+        error_msg = f"❌ <b>Blog Publisher Failed</b>\n\n<code>{traceback.format_exc()[:2000]}</code>"
+        send_telegram_message(error_msg)
         sys.exit(1)
 
 if __name__ == "__main__":
