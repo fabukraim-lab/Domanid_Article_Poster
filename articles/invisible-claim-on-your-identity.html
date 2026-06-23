@@ -64,7 +64,8 @@
     
 
 
-    <style>
+    
+<style>
         .article-container {
             max-width: 900px;
             margin: 150px auto 100px;
@@ -84,13 +85,153 @@
             margin: 40px 0 20px;
             font-family: 'Playfair Display', serif;
         }
+        .article-body h3 {
+            color: var(--text-heading);
+            margin: 30px 0 15px;
+            font-family: 'Playfair Display', serif;
+        }
+        .article-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
         .article-meta {
             color: var(--primary-500);
             font-size: 1rem;
             margin-bottom: 20px;
         }
+        .share-section {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            border: 1px solid var(--border-light);
+            background: var(--bg-white);
+            color: var(--text-body);
+        }
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .share-btn.twitter:hover { background: #000; color: #fff; border-color: #000; }
+        .share-btn.facebook:hover { background: #1877f2; color: #fff; border-color: #1877f2; }
+        .share-btn.linkedin:hover { background: #0a66c2; color: #fff; border-color: #0a66c2; }
+        .share-btn.whatsapp:hover { background: #25d366; color: #fff; border-color: #25d366; }
+        .author-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: var(--bg-subtle);
+            border-radius: 16px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        .author-box img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .author-box .author-name {
+            font-weight: 700;
+            color: var(--text-heading);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+        }
+        .author-box .author-bio {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .newsletter-box {
+            padding: 40px;
+            background: var(--primary-50);
+            border: 1px solid var(--primary-200);
+            border-radius: 20px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        .newsletter-box h3 {
+            color: var(--text-heading);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .newsletter-box p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .newsletter-box .newsletter-form {
+            display: flex;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .newsletter-box input[type="email"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 20px;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--bg-white);
+            color: var(--text-body);
+            outline: none;
+        }
+        .newsletter-box input[type="email"]:focus {
+            border-color: var(--primary-500);
+        }
 
+        @media (max-width: 768px) {
+            .article-container {
+                margin: 100px 16px 80px !important;
+                padding: 24px !important;
+            }
+            .article-header h1 {
+                font-size: 1.8rem !important;
+            }
+            .article-body {
+                font-size: 1rem !important;
+            }
+            .author-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        @media (max-width: 480px) {
+            .article-container {
+                margin: 80px 12px 60px !important;
+                padding: 16px !important;
+            }
+            .article-header h1 {
+                font-size: 1.5rem !important;
+            }
+            .article-body {
+                font-size: 0.95rem !important;
+            }
+            .share-btn {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+        }
     </style>
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3988572626513727" crossorigin="anonymous"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2B5PM5K2CD"></script>
