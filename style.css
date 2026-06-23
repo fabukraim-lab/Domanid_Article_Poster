@@ -499,6 +499,35 @@ body {
     font-size: 0.9rem;
 }
 
+/* Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hero-title {
+        font-size: 3.2rem;
+    }
+    .section-title {
+        font-size: 2.3rem;
+    }
+    .grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+    #allGrid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+    .section {
+        padding: 80px 0;
+    }
+    .card-domain-name {
+        font-size: 1.4rem;
+    }
+    .articles-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+        gap: 28px !important;
+    }
+}
+
+/* Mobile (max-width: 768px) */
 @media (max-width: 768px) {
     .menu-toggle {
         display: flex;
@@ -561,5 +590,147 @@ body {
     }
     .section-title {
         font-size: 2rem;
+    }
+    .section {
+        padding: 60px 0;
+    }
+    .section-desc {
+        font-size: 1rem;
+    }
+    .section-title-wrapper {
+        margin-bottom: 40px;
+    }
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    #allGrid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .card-domain-name {
+        font-size: 1.3rem;
+    }
+    .card-price {
+        font-size: 1.2rem;
+    }
+    .domain-card {
+        padding: 20px;
+    }
+    .premium-badge {
+        right: 20px;
+    }
+    .hero-badge {
+        font-size: 0.75rem;
+        padding: 4px 14px;
+    }
+    .articles-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+    .blog-header {
+        padding: 100px 0 40px 0 !important;
+    }
+    .blog-header h1 {
+        font-size: 2.2rem !important;
+    }
+    .article-image {
+        height: 160px !important;
+    }
+    .article-content {
+        padding: 20px !important;
+    }
+    .article-title {
+        font-size: 1.25rem !important;
+    }
+    .article-container {
+        margin: 100px 16px 80px !important;
+        padding: 24px !important;
+    }
+    .article-header h1 {
+        font-size: 1.8rem !important;
+    }
+    .article-body {
+        font-size: 1rem !important;
+    }
+    .article-body h2 {
+        font-size: 1.4rem !important;
+    }
+    .article-body img {
+        max-width: 100%;
+        height: auto;
+    }
+    .footer {
+        padding: 32px 0;
+    }
+    .footer .social-icons {
+        gap: 16px !important;
+        flex-wrap: wrap;
+    }
+    .footer .social-icons a svg {
+        width: 20px;
+        height: 20px;
+    }
+    .features-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .glass-panel[style*="padding: 40px"] {
+        padding: 28px !important;
+    }
+}
+
+/* Small phones (< 480px) */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    .hero-subtitle {
+        font-size: 0.9rem;
+    }
+    .logo {
+        font-size: 1.4rem;
+    }
+    .nav-links a {
+        font-size: 1rem;
+    }
+    .section-title {
+        font-size: 1.6rem;
+    }
+    .search-wrapper input {
+        font-size: 0.9rem;
+    }
+    .btn-glow {
+        font-size: 0.85rem;
+        height: 42px;
+        padding: 0 20px;
+    }
+    .card-domain-name {
+        font-size: 1.1rem;
+    }
+    .card-price {
+        font-size: 1.1rem;
+    }
+    .blog-header {
+        padding: 80px 16px 30px !important;
+    }
+    .blog-header h1 {
+        font-size: 1.8rem !important;
+    }
+    .article-container {
+        margin: 80px 12px 60px !important;
+        padding: 16px !important;
+    }
+    .article-header h1 {
+        font-size: 1.5rem !important;
+    }
+    .article-body h2 {
+        font-size: 1.2rem !important;
+    }
+    .article-body {
+        font-size: 0.95rem !important;
+    }
+    .container {
+        padding: 0 16px;
     }
 }
