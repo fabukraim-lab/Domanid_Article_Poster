@@ -42,15 +42,15 @@
         .article-body {
             line-height: 1.9;
             font-size: 1.2rem;
-            color: var(--text-secondary);
+            color: #374151;
         }
         .article-body h2 {
-            color: var(--text-heading);
+            color: #111827;
             margin: 40px 0 20px;
             font-family: 'Playfair Display', serif;
         }
         .article-body h3 {
-            color: var(--text-heading);
+            color: #111827;
             margin: 30px 0 15px;
             font-family: 'Playfair Display', serif;
         }
@@ -59,19 +59,20 @@
             font-size: 2.5rem;
             font-weight: 800;
             letter-spacing: -0.5px;
+            color: #111827;
         }
         .article-meta {
-            color: var(--primary-500);
+            color: #0284c7;
             font-size: 1rem;
             margin-bottom: 20px;
         }
         .breadcrumbs {
             margin-bottom: 24px;
             font-size: 0.9rem;
-            color: var(--text-muted);
+            color: #6b7280;
         }
         .breadcrumbs a {
-            color: var(--primary-500);
+            color: #0284c7;
             text-decoration: none;
         }
         .breadcrumbs a:hover {
@@ -79,10 +80,10 @@
         }
         .breadcrumbs .sep {
             margin: 0 8px;
-            color: var(--text-light);
+            color: #9ca3af;
         }
         .reading-time {
-            color: var(--text-muted);
+            color: #6b7280;
             font-size: 0.9rem;
             margin-top: 8px;
         }
@@ -103,9 +104,9 @@
             font-weight: 600;
             font-size: 0.95rem;
             transition: all 0.3s;
-            border: 1px solid var(--border-light);
-            background: var(--bg-white);
-            color: var(--text-body);
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            color: #374151;
         }
         .share-btn:hover {
             transform: translateY(-2px);
@@ -120,44 +121,39 @@
             align-items: center;
             gap: 20px;
             padding: 25px;
-            background: var(--bg-subtle);
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
             border-radius: 16px;
             margin: 40px 0;
             flex-wrap: wrap;
         }
-        .author-box img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
         .author-box .author-name {
             font-weight: 700;
-            color: var(--text-heading);
+            color: #111827;
             font-family: 'Playfair Display', serif;
             font-size: 1.2rem;
         }
         .author-box .author-bio {
-            color: var(--text-secondary);
+            color: #4b5563;
             font-size: 0.95rem;
             line-height: 1.5;
         }
         .newsletter-box {
             padding: 40px;
-            background: var(--primary-50);
-            border: 1px solid var(--primary-200);
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
             border-radius: 20px;
             text-align: center;
             margin: 40px 0;
         }
         .newsletter-box h3 {
-            color: var(--text-heading);
+            color: #111827;
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
             margin-bottom: 10px;
         }
         .newsletter-box p {
-            color: var(--text-secondary);
+            color: #4b5563;
             margin-bottom: 20px;
         }
         .newsletter-box .newsletter-form {
@@ -172,15 +168,15 @@
             flex: 1;
             min-width: 200px;
             padding: 14px 20px;
-            border: 1px solid var(--border-light);
+            border: 1px solid #d1d5db;
             border-radius: 12px;
             font-size: 1rem;
-            background: var(--bg-white);
-            color: var(--text-body);
+            background: #ffffff;
+            color: #374151;
             outline: none;
         }
         .newsletter-box input[type="email"]:focus {
-            border-color: var(--primary-500);
+            border-color: #0ea5e9;
         }
         .related-articles {
             margin: 40px 0;
@@ -188,7 +184,7 @@
         .related-articles h3 {
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
-            color: var(--text-heading);
+            color: #111827;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -207,7 +203,7 @@
             box-shadow: var(--shadow-md);
         }
         .related-card h4 {
-            color: var(--text-heading);
+            color: #111827;
             font-family: 'Playfair Display', serif;
             font-size: 1.1rem;
             margin-top: 8px;
@@ -215,6 +211,24 @@
         }
         .related-card .article-meta {
             font-size: 0.85rem;
+        }
+        .cta-box {
+            margin-top: 50px;
+            padding: 30px;
+            background: #0c4a6e;
+            border: 1px solid #0ea5e9;
+            border-radius: 20px;
+            text-align: center;
+        }
+        .cta-box h3 {
+            color: #f8fafc;
+            margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+        }
+        .cta-box p {
+            color: #94a3b8;
+            margin-bottom: 20px;
         }
 
         @media (max-width: 768px) {
@@ -381,9 +395,9 @@
             </div>
         </div>
 
-            <div style="margin-top: 50px; padding: 30px; background: var(--primary-50); border: 1px solid var(--primary-200); border-radius: 20px; text-align: center;">
-                <h3 style="color: var(--text-heading); margin-bottom: 10px;">Looking for a premium domain?</h3>
-                <p style="margin-bottom: 20px;">Browse our curated portfolio of elite digital assets.</p>
+            <div class="cta-box">
+                <h3>Looking for a premium domain?</h3>
+                <p>Browse our curated portfolio of elite digital assets.</p>
                 <a href="../index.html#all" class="btn-glow">View Available Domains</a>
             </div>
         </article>
