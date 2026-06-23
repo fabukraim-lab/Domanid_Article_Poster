@@ -6,7 +6,7 @@ import io
 import traceback
 import sys
 import json
-import sys
+from datetime import datetime
 
 # --- CONFIGURATION ---
 BLOG_CSV_URL = "https://docs.google.com/spreadsheets/d/1PNIvLQsoyh6ssc5wEvtmB4K8eT9tyNmngeyRpa1rFbY/export?format=csv"
@@ -41,7 +41,40 @@ def fetch_csv_data(url):
         print(f"Error fetching CSV: {e}")
         return None
 
-def generate_article(row, template):
+def reading_time(text):
+    words = len(text.split())
+    mins = max(1, round(words / 200))
+    return f"{mins} min read"
+
+def to_iso_date(date_str):
+    try:
+        parts = date_str.split("-")
+        if len(parts) == 3:
+            return f"{parts[0]}-{parts[1]}-{parts[2]}"
+        return date_str
+    except:
+        return date_str
+
+def related_articles_html(current_slug, all_articles, max_count=3):
+    others = [a for a in all_articles if a["slug"] != current_slug]
+    selected = others[:max_count]
+    if not selected:
+        return ""
+    cards = ""
+    for art in selected:
+        cards += f"""
+            <a href="{art['slug']}.html" class="glass-panel related-card" style="text-decoration:none; display:block;">
+                <span class="article-meta">{art['category']}</span>
+                <h4>{art['title']}</h4>
+            </a>"""
+    return f"""
+        <div class="related-articles">
+            <h3>Continue Reading</h3>
+            <div class="related-grid">{cards}
+            </div>
+        </div>"""
+
+def generate_article(row, template, all_articles=None):
     # Mapping: Title, Slug, Category, Date, Author, Excerpt, FullContent, Keywords, Image, Status
     if len(row) < 8:
         print(f"Skipping row due to insufficient columns: {row}")
@@ -53,16 +86,23 @@ def generate_article(row, template):
     if len(row) >= 9 and row[8].strip():
         image = row[8].strip()
 
+    rt = reading_time(content)
+    date_iso = to_iso_date(date)
+    related = related_articles_html(slug, all_articles) if all_articles else ""
+
     page_content = template
     page_content = page_content.replace("{{TITLE}}", title)
     page_content = page_content.replace("{{SLUG}}", slug)
     page_content = page_content.replace("{{CATEGORY}}", category)
     page_content = page_content.replace("{{DATE}}", date)
+    page_content = page_content.replace("{{DATE_ISO}}", date_iso)
     page_content = page_content.replace("{{AUTHOR}}", author)
     page_content = page_content.replace("{{EXCERPT}}", excerpt)
     page_content = page_content.replace("{{CONTENT}}", content)
     page_content = page_content.replace("{{KEYWORDS}}", keywords)
     page_content = page_content.replace("{{IMAGE}}", image)
+    page_content = page_content.replace("{{READING_TIME}}", rt)
+    page_content = page_content.replace("{{RELATED_ARTICLES}}", related)
 
     filename = f"{slug}.html"
     filepath = os.path.join(ARTICLES_DIR, filename)
@@ -86,6 +126,39 @@ def send_telegram_message(text):
             print(f"Telegram send failed: {resp.text}")
     except Exception as e:
         print(f"Telegram error: {e}")
+
+SITEMAP_PATH = "sitemap.xml"
+
+def generate_sitemap(articles):
+    base_url = "https://domanid.com"
+    static_pages = [
+        ("", 1.0, "weekly"),
+        ("about.html", 0.8, "monthly"),
+        ("contact.html", 0.7, "monthly"),
+        ("terms.html", 0.3, "yearly"),
+        ("privacy.html", 0.3, "yearly"),
+        ("articles/index.html", 0.9, "daily"),
+    ]
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+    for path, priority, changefreq in static_pages:
+        lines.append(f"  <url>")
+        lines.append(f"    <loc>{base_url}/{path}</loc>")
+        lines.append(f"    <priority>{priority}</priority>")
+        if changefreq:
+            lines.append(f"    <changefreq>{changefreq}</changefreq>")
+        lines.append(f"  </url>")
+    for art in articles:
+        lines.append(f"  <url>")
+        lines.append(f"    <loc>{base_url}/articles/{art['slug']}.html</loc>")
+        lines.append(f"    <priority>0.6</priority>")
+        lines.append(f"  </url>")
+    lines.append("</urlset>")
+    with open(SITEMAP_PATH, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    print(f"Generated {SITEMAP_PATH}")
 
 def update_index(articles):
     if not os.path.exists(INDEX_PATH):
@@ -112,6 +185,45 @@ def update_index(articles):
     with open(INDEX_PATH, "w", encoding="utf-8") as f:
         f.write(new_content)
     print("Updated articles/index.html")
+
+GENERATE_RSS = True
+
+def generate_rss(articles):
+    if not GENERATE_RSS:
+        return
+    items = ""
+    for art in articles:
+        items += f"""    <item>
+        <title>{art['title']}</title>
+        <link>https://domanid.com/articles/{art['slug']}.html</link>
+        <description><![CDATA[{art['excerpt']}]]></description>
+        <guid>https://domanid.com/articles/{art['slug']}.html</guid>
+    </item>
+"""
+    rss = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>DomanID Blog - Domain Investing Insights</title>
+    <link>https://domanid.com/articles/index.html</link>
+    <description>Expert insights on domain investing, premium domain strategies, SEO, and digital asset management.</description>
+    <language>en</language>
+    <atom:link href="https://domanid.com/rss.xml" rel="self" type="application/rss+xml"/>
+{items}  </channel>
+</rss>"""
+    with open("rss.xml", "w", encoding="utf-8") as f:
+        f.write(rss)
+    print("Generated rss.xml")
+
+def inject_related_into_article(slug, all_articles):
+    filepath = os.path.join(ARTICLES_DIR, f"{slug}.html")
+    if not os.path.exists(filepath):
+        return
+    with open(filepath, "r", encoding="utf-8", errors="replace") as f:
+        content = f.read()
+    related = related_articles_html(slug, all_articles)
+    content = content.replace("{{RELATED_ARTICLES}}", related)
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(content)
 
 def main():
     try:
@@ -143,8 +255,23 @@ def main():
         articles_data = []
         found_any = False
         sheet_row = -1
+
+        # 0. Build full posted articles list FIRST (for related articles context)
+        all_posted_articles = []
+        for i, row in enumerate(csv_rows):
+            if i == 0: continue
+            status = ""
+            if len(row) >= 10:
+                status = row[9].strip().lower()
+            if status == "posted" and len(row) >= 8:
+                expected_filepath = os.path.join(ARTICLES_DIR, f"{row[1]}.html")
+                if os.path.exists(expected_filepath):
+                    all_posted_articles.append({
+                        "title": row[0], "slug": row[1], "category": row[2],
+                        "date": row[3], "excerpt": row[5]
+                    })
         
-        # 1. Post ONE pending article
+        # 1. Post ONE pending article (with full context for related articles)
         for i, row in enumerate(csv_rows):
             if i == 0: continue
             status = "pending"
@@ -153,9 +280,10 @@ def main():
             
             if status == "pending":
                 print(f"Found pending article: {row[0]}")
-                art = generate_article(row, template)
+                art = generate_article(row, template, all_posted_articles)
                 if art:
                     articles_data.append(art)
+                    all_posted_articles.append(art)
                     
                     if APPS_SCRIPT_URL:
                         sheet_row = i + 1
@@ -169,27 +297,32 @@ def main():
 
         # 2. Rebuild index (latest first)
         print("Rebuilding articles/index.html...")
-        all_posted_articles = []
-        for i, row in enumerate(csv_rows):
-            if i == 0: continue
-            status = ""
-            if len(row) >= 10:
-                status = row[9].strip().lower()
-            
-            if (found_any and i == (sheet_row - 1)) or status == "posted":
-                if len(row) >= 8:
+        if not found_any:
+            # Rebuild with current posted list (no new article)
+            all_posted_articles = []
+            for i, row in enumerate(csv_rows):
+                if i == 0: continue
+                status = ""
+                if len(row) >= 10:
+                    status = row[9].strip().lower()
+                if status == "posted" and len(row) >= 8:
                     expected_filepath = os.path.join(ARTICLES_DIR, f"{row[1]}.html")
                     if os.path.exists(expected_filepath):
                         all_posted_articles.append({
-                            "title": row[0], "slug": row[1], "category": row[2], 
+                            "title": row[0], "slug": row[1], "category": row[2],
                             "date": row[3], "excerpt": row[5]
                         })
-                    else:
-                        print(f"Skipping {row[1]} from index: HTML file was manually deleted.")
         
         if all_posted_articles:
             all_posted_articles.reverse() # SORT: LATEST FIRST
             update_index(all_posted_articles)
+            generate_sitemap(all_posted_articles)
+            generate_rss(all_posted_articles)
+
+        # 3. Re-inject related articles into the new article with full list
+        if articles_data:
+            new_art = articles_data[-1]
+            inject_related_into_article(new_art["slug"], all_posted_articles)
 
         if articles_data:
             art = articles_data[-1]
