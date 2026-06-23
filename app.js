@@ -4,9 +4,17 @@
  */
 
 // --- CONFIGURATION ---
-// USER: Replace these URLs with the "Published to Web (CSV)" links from your Google Sheets!
 const PREMIUM_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTu-hMWPh-WbM--mMk7tZjJmgSlRDO6k8VFMk_lmoiNWP2-_267ev0rBwXC5jPvDPenXmRQNeLB-8-H/pub?output=csv";
 const ALL_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSqCdsEOjGGzEH5vKY7f_TMdobdDNYNcM24d9GDjGyrxZfHR4lomIuJUc6GzZLQ27OeQst-WYpIC0h1/pub?output=csv";
+
+// Debounce utility
+function debounce(fn, delay) {
+    let timer;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
 
 // Store data in memory for fast searching
 let premiumDomains = [];
@@ -94,30 +102,33 @@ function parseCSV(csvText) {
  * Creates the HTML for a single Domain Card
  */
 function createDomainCard(domain, isPremium = false) {
-    const card = document.createElement('article');
+    const card = document.createElement('div');
     card.className = 'domain-card glass-panel';
+    card.setAttribute('itemscope', '');
+    card.setAttribute('itemtype', 'https://schema.org/Product');
     
-    // Support either traditional "domain" field or the new "title" field
     const domainTitle = domain.title || domain.domain || 'Unknown.com';
     const domainDescription = domain.description || domain.price || 'A premium digital asset.';
     
     card.innerHTML = `
         <div class="domain-header" style="flex-direction: column; align-items: flex-start; gap: 10px;">
             <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-                <h3 class="domain-name" style="font-size: 1.6rem; word-break: break-all;">${domainTitle}</h3>
+                <h3 class="domain-name" style="font-size: 1.6rem; word-break: break-all;" itemprop="name">${domainTitle}</h3>
                 ${isPremium ? '<span class="premium-badge">Premium</span>' : ''}
             </div>
+            <meta itemprop="category" content="${isPremium ? 'Premium Domain' : 'Domain'}">
         </div>
-        <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 20px; font-weight: normal; line-height: 1.6; flex-grow: 1;">
+        <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 20px; font-weight: normal; line-height: 1.6; flex-grow: 1;" itemprop="description">
             ${domainDescription}
         </p>
         <ul class="domain-features" style="margin-top: auto;">
             <li><span class="gradient-text">✓</span> Instant Secure Transfer</li>
             <li><span class="gradient-text">✓</span> 100% Buyer Protection</li>
         </ul>
-        <a href="${domain.link || '#'}" target="_blank" class="btn-glow" style="width: 100%;">
+        <a href="${domain.link || '#'}" target="_blank" class="btn-glow" style="width: 100%;" itemprop="url" onclick="gtag('event', 'domain_click', {domain: '${domainTitle}', type: '${isPremium ? 'premium' : 'standard'}', url: '${domain.link || '#'}'});">
             ${isPremium ? 'Buy Now' : 'Make an Offer'}
         </a>
+        <link itemprop="availability" href="https://schema.org/InStock">
     `;
     
     return card;
@@ -193,13 +204,19 @@ async function loadDomains() {
 /**
  * Search Functionality
  */
-function handleSearch() {
+const handleSearch = debounce(function() {
     const query = document.getElementById('searchInput').value.toLowerCase().trim();
     
     if (!query) {
         renderDomains(premiumDomains, 'premiumGrid', true);
         renderDomains(allDomains, 'allGrid', false);
+        renderDomains(MOCK_SOLD, 'soldGrid', false);
         return;
+    }
+    
+    // Track search query (only if meaningful length)
+    if (query.length >= 2 && typeof gtag === 'function') {
+        gtag('event', 'search', { search_term: query });
     }
     
     const filteredPremium = premiumDomains.filter(d => 
@@ -221,7 +238,7 @@ function handleSearch() {
         (d.description || d.price || '').toLowerCase().includes(query)
     );
     renderDomains(filteredSold, 'soldGrid', false);
-}
+}, 300);
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
@@ -234,7 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const searchBtn = document.getElementById('searchBtn');
     if (searchBtn) {
-        searchBtn.addEventListener('click', handleSearch);
+        searchBtn.addEventListener('click', function() {
+            handleSearch();
+            if (typeof gtag === 'function') {
+                const q = document.getElementById('searchInput').value.trim();
+                if (q) gtag('event', 'search_btn', { search_term: q });
+            }
+        });
     }
 
     // Mobile Menu Toggle
