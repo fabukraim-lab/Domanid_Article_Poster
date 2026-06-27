@@ -977,10 +977,6 @@ body {
         background: rgba(30, 41, 59, 0.6);
         border: 1px solid var(--border-light);
     }
-    .newsletter-box {
-        background: var(--bg-subtle);
-        border-color: var(--border-light);
-    }
     .author-box {
         background: var(--bg-light);
     }
@@ -1024,7 +1020,7 @@ body {
     .navbar, .footer, .glass-navbar {
         display: none !important;
     }
-    .share-section, .newsletter-box, .author-box {
+    .share-section, .author-box {
         display: none !important;
     }
     .btn-glow, .btn-primary {
