@@ -534,6 +534,86 @@ body {
     box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
 }
 
+.related-premium-domains {
+    margin: 40px 0;
+}
+.related-premium-domains h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--text-heading);
+    margin-bottom: 8px;
+    text-align: center;
+}
+.section-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    font-size: 1rem;
+}
+.domains-inline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+.domain-card-inline {
+    display: block;
+    padding: 24px;
+    background: linear-gradient(135deg, rgba(12, 74, 110, 0.08), rgba(8, 47, 73, 0.05));
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.domain-card-inline:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-500);
+}
+.domain-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.domain-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    word-break: break-all;
+}
+.premium-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #111827;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.domain-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 12px;
+}
+.domain-cta {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-500);
+}
+@media (max-width: 480px) {
+    .domains-inline-grid {
+        grid-template-columns: 1fr;
+    }
+    .domain-card-inline {
+        padding: 16px;
+    }
+}
+
 .glass-panel {
     background: var(--bg-white);
     border: 1px solid var(--border-light);
