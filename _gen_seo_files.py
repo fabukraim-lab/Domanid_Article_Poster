@@ -1,29 +1,41 @@
-"""Generate initial sitemap.xml and rss.xml from CSV data."""
-import csv, io, os, datetime, json
+"""Generate sitemap.xml and rss.xml from published site content."""
 
-ARTICLES_DIR = "articles"
+import datetime
+import html
+import json
+import os
 
-rows = []
-try:
-    import requests
-    resp = requests.get("https://docs.google.com/spreadsheets/d/1PNIvLQsoyh6ssc5wEvtmB4K8eT9tyNmngeyRpa1rFbY/export?format=csv", timeout=30)
-    rows = list(csv.reader(io.StringIO(resp.content.decode("utf-8"))))
-except:
-    local = "blog_content.csv"
-    if os.path.exists(local):
-        with open(local, encoding="utf-8") as f:
-            rows = list(csv.reader(f))
+from article_inventory import (
+    load_articles,
+    validate_articles,
+)
+
 
 base = "https://domanid.com"
 
-# Build article list
-articles = []
-for i, row in enumerate(rows):
-    if i == 0 or len(row) < 8:
-        continue
-    articles.append({"slug": row[1], "title": row[0], "excerpt": row[5], "date": row[3]})
 
-articles.reverse()  # latest first
+# Published HTML files are the source of truth.
+articles = load_articles()
+
+article_errors = validate_articles(
+    articles
+)
+
+if article_errors:
+    print(
+        "[FAIL] Article inventory validation failed."
+    )
+
+    for error in article_errors:
+        print(
+            f"  - {error}"
+        )
+
+    raise SystemExit(1)
+
+print(
+    f"[INFO] Published articles: {len(articles)}"
+)
 
 # Sitemap
 static = [
@@ -44,7 +56,12 @@ for path, pri, freq in static:
     urls.append(u)
 
 for art in articles:
-    urls.append(f'  <url>\n    <loc>{base}/articles/{art["slug"]}.html</loc>\n    <priority>0.6</priority>\n  </url>')
+    urls.append(
+        f'  <url>\n'
+        f'    <loc>{art["canonical"]}</loc>\n'
+        f'    <priority>0.6</priority>\n'
+        f'  </url>'
+    )
 
 
 # Add active domain pages from normalized domain inventory
@@ -91,14 +108,24 @@ for art in articles:
         pubdate = dt.strftime("%a, %d %b %Y %H:%M:%S +0000")
     except:
         pass
-    safe_title = art["title"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    items.append(f"""    <item>
+    safe_title = html.escape(
+        art["title"]
+    )
+
+    safe_description = (
+        art["excerpt"]
+        .replace("]]>", "]]&gt;")
+    )
+
+    items.append(
+        f"""    <item>
         <title>{safe_title}</title>
-        <link>{base}/articles/{art["slug"]}.html</link>
-        <description><![CDATA[{art["excerpt"]}]]></description>
-        <guid>{base}/articles/{art["slug"]}.html</guid>
+        <link>{art["canonical"]}</link>
+        <description><![CDATA[{safe_description}]]></description>
+        <guid>{art["canonical"]}</guid>
         <pubDate>{pubdate}</pubDate>
-    </item>""")
+    </item>"""
+    )
 
 rss = f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">

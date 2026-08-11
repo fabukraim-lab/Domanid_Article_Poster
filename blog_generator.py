@@ -1,6 +1,8 @@
 import csv
+import html
 import os
 import requests
+from article_inventory import load_articles
 import re
 import io
 import traceback
@@ -131,31 +133,102 @@ def send_telegram_message(text):
     except Exception as e:
         print(f"Telegram error: {e}")
 
-def update_index(articles):
+def update_index(articles=None):
+    """
+    Rebuild articles/index.html from published HTML files.
+
+    articles/*.html is the source of truth.
+    """
     if not os.path.exists(INDEX_PATH):
         print("articles/index.html not found.")
         return
 
-    with open(INDEX_PATH, "r", encoding="utf-8", errors="replace") as f:
+    with open(
+        INDEX_PATH,
+        "r",
+        encoding="utf-8",
+        errors="replace",
+    ) as f:
         content = f.read()
 
-    grid_html = ""
-    for art in articles:
-        grid_html += f"""
+    published_articles = load_articles()
+
+    grid_parts = []
+
+    for art in published_articles:
+        title = html.escape(
+            art["title"]
+        )
+
+        category = html.escape(
+            art["category"]
+        )
+
+        date = html.escape(
+            art["date"]
+        )
+
+        excerpt = html.escape(
+            art["excerpt"]
+        )
+
+        filename = html.escape(
+            art["filename"],
+            quote=True,
+        )
+
+        grid_parts.append(
+            f"""
         <article class="glass-panel">
             <div class="article-content">
-                <span class="article-meta">{art['category']} | {art['date']}</span>
-                <h2 class="article-title"><a href="{art['slug']}.html">{art['title']}</a></h2>
-                <p class="article-excerpt">{art['excerpt']}</p>
+                <span class="article-meta">{category} | {date}</span>
+                <h2 class="article-title"><a href="{filename}">{title}</a></h2>
+                <p class="article-excerpt">{excerpt}</p>
             </div>
         </article>"""
+        )
 
-    pattern = re.compile(r"<!-- START_ARTICLES -->.*?<!-- END_ARTICLES -->", re.DOTALL)
-    new_content = pattern.sub(f"<!-- START_ARTICLES -->\n{grid_html}\n<!-- END_ARTICLES -->", content)
+    grid_html = "".join(
+        grid_parts
+    )
 
-    with open(INDEX_PATH, "w", encoding="utf-8") as f:
+    marker_pattern = re.compile(
+        r"<!-- START_ARTICLES -->"
+        r".*?"
+        r"<!-- END_ARTICLES -->",
+        re.DOTALL,
+    )
+
+    replacement_block = (
+        "<!-- START_ARTICLES -->\n"
+        + grid_html
+        + "\n<!-- END_ARTICLES -->"
+    )
+
+    new_content, count = marker_pattern.subn(
+        replacement_block,
+        content,
+        count=1,
+    )
+
+    if count != 1:
+        raise RuntimeError(
+            "Article index markers were not found exactly once."
+        )
+
+    with open(
+        INDEX_PATH,
+        "w",
+        encoding="utf-8",
+        newline="\n",
+    ) as f:
         f.write(new_content)
-    print("Updated articles/index.html")
+
+    print(
+        f"Updated articles/index.html "
+        f"with {len(published_articles)} articles"
+    )
+
 
 def inject_related_into_article(slug, all_articles):
     filepath = os.path.join(ARTICLES_DIR, f"{slug}.html")
