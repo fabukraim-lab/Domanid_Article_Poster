@@ -1,3 +1,25 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local previews
+preview/
+*_preview_*.png
+domain_preview_*.png
+homepage_preview_*.png
+
+# Local phase backups
+*.backup.py
+*.backup.js
+*.backup.html
+*.backup.yml
+*.backup.json
+*.phase1*.py
+*.phase1*.js
+*.phase1*.html
+*.phase1*.yml
+articles.phase1h.backup/

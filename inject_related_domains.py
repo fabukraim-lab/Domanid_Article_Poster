@@ -1,326 +1,605 @@
-import os
-import re
+from __future__ import annotations
+
+import argparse
 import html as html_mod
-from datetime import datetime
+import json
+import re
+from pathlib import Path
+from typing import Any
 
-ARTICLES_DIR = "articles"
-TEMPLATE_PATH = "article_template.html"
+from generators.domain_page_generator import infer_domain_category
 
-DOMAINS_DATA = [
-    {"domain": "attorneyauto.com", "premium": True, "link": "https://domanid.com/#all", "description": "Premium domain for car accident legal services. High SEO potential targeting legal clients.", "keywords": ["attorney", "auto", "car accident", "legal", "lawyer", "injury", "personal injury", "law firm", "accident lawyer", "legal marketing"]},
-    {"domain": "dentalimplantsservice.com", "premium": True, "link": "https://domanid.com/#all", "description": "Perfect domain for dental implant clinics. SEO-rich, builds trust, memorable for patients.", "keywords": ["dental", "implant", "dentist", "dental clinic", "teeth", "oral", "cosmetic dentistry", "dental care"]},
-    {"domain": "digitately.com", "premium": True, "link": "https://domanid.com/#all", "description": "Creative brandable domain for digital agencies, tech startups, and app developers.", "keywords": ["digital", "tech", "startup", "agency", "brandable", "technology", "software", "app", "creative", "design", "web"]},
-    {"domain": "lawyerslegaladvice.com", "premium": True, "link": "https://domanid.com/#all", "description": "Premium domain for legal advice platforms. Keyword-rich, authoritative, trust-building.", "keywords": ["lawyer", "legal", "legal advice", "law firm", "counsel", "solicitor", "legal help", "attorney"]},
-    {"domain": "poolcleanermiami.com", "premium": True, "link": "https://domanid.com/#all", "description": "Premium local domain for Miami pool cleaning services. SEO-friendly and brandable.", "keywords": ["pool", "cleaning", "miami", "pool service", "swimming", "pools", "local business", "pool maintenance"]},
-    {"domain": "bestdeodorants.com", "premium": False, "link": "https://domanid.com/#all", "description": "Keyword-rich domain for deodorant and personal care e-commerce. Memorable and brandable.", "keywords": ["deodorant", "beauty", "personal care", "hygiene", "body care", "fragrance", "cosmetic", "ecommerce"]},
-    {"domain": "besteuropevacations.com", "premium": False, "link": "https://domanid.com/#all", "description": "Excellent domain for European travel deals. SEO-optimized for tours and holiday packages.", "keywords": ["europe", "vacation", "travel", "tourism", "holiday", "trip", "destination", "tour", "travel agency"]},
-    {"domain": "bestlawyercaraccident.com", "premium": False, "link": "https://domanid.com/#all", "description": "Targeted domain for car accident legal services. SEO-rich for PPC and organic traffic.", "keywords": ["lawyer", "car accident", "legal", "injury", "auto accident", "accident lawyer", "personal injury"]},
-    {"domain": "buyslivercoins.com", "premium": False, "link": "https://domanid.com/#all", "description": "Ideal domain for silver coin trading and precious metals e-commerce. Trustworthy and direct.", "keywords": ["silver", "coin", "investment", "precious metal", "collectible", "bullion", "metal investing"]},
-    {"domain": "cardrivinginstructors.com", "premium": False, "link": "https://domanid.com/#all", "description": "Perfect domain for driving schools and instructor networks. SEO-optimized for learner traffic.", "keywords": ["driving", "instructor", "driving school", "driver education", "learner", "driving lesson", "driving test"]},
-    {"domain": "chevroletdealership.com", "premium": False, "link": "https://domanid.com/#all", "description": "Strong brandable domain for Chevrolet dealerships. High keyword relevance for auto sales.", "keywords": ["chevrolet", "dealership", "car dealer", "auto", "automotive", "car sales", "vehicle"]},
-    {"domain": "clinicvictoria.com", "premium": False, "link": "https://domanid.com/#all", "description": "Professional domain for medical or beauty clinics. Great for local SEO and client trust.", "keywords": ["clinic", "victoria", "medical", "health", "healthcare", "doctor", "beauty clinic", "medical practice"]},
-    {"domain": "companyinspector.com", "premium": False, "link": "https://domanid.com/#all", "description": "Keyword-rich domain for business audits and compliance services. Authoritative and memorable.", "keywords": ["company", "inspection", "business audit", "compliance", "due diligence", "investigation", "business"]},
-    {"domain": "createproposal.com", "premium": False, "link": "https://domanid.com/#all", "description": "Brandable domain for proposal platforms and business templates. Versatile and action-oriented.", "keywords": ["proposal", "template", "business plan", "presentation", "contract", "pitch", "document"]},
-    {"domain": "flowershopboston.com", "premium": False, "link": "https://domanid.com/#all", "description": "Perfect local domain for Boston flower shops. SEO-friendly for local delivery and orders.", "keywords": ["flower", "boston", "florist", "flower shop", "gift", "bouquet", "flower delivery"]},
-    {"domain": "garagefloortiling.com", "premium": False, "link": "https://domanid.com/#all", "description": "Domain for flooring and renovation businesses. SEO-optimized and professionally brandable.", "keywords": ["garage", "flooring", "tile", "renovation", "home improvement", "floor", "contractor", "remodeling"]},
-    {"domain": "gilbertarizonahome.com", "premium": False, "link": "https://domanid.com/#all", "description": "Targeted real estate domain for Gilbert, Arizona. Perfect for local realtors and listings.", "keywords": ["real estate", "gilbert", "arizona", "home", "house", "property", "realtor", "real estate agent"]},
-    {"domain": "hotelsmajorca.com", "premium": False, "link": "https://domanid.com/#all", "description": "Ideal domain for Majorca hotel booking and travel sites. SEO-friendly for tourism marketing.", "keywords": ["hotel", "majorca", "travel", "tourism", "accommodation", "resort", "vacation", "booking"]},
-    {"domain": "hotelsvictorville.com", "premium": False, "link": "https://domanid.com/#all", "description": "Perfect domain for Victorville hotel listings. Optimized for local search and PPC campaigns.", "keywords": ["hotel", "victorville", "travel", "accommodation", "lodging", "motel", "local business"]},
-    {"domain": "lawyeremploymentdiscrimination.com", "premium": False, "link": "https://domanid.com/#all", "description": "Niche legal domain for employment discrimination cases. High SEO value for specialized queries.", "keywords": ["lawyer", "employment", "discrimination", "labor law", "workplace", "employment law", "harassment"]},
-    {"domain": "lifeinsuranceinstantly.com", "premium": False, "link": "https://domanid.com/#all", "description": "Strong domain for instant life insurance platforms. SEO and PPC optimized for conversions.", "keywords": ["life insurance", "insurance", "life coverage", "financial planning", "insurance quote", "term life"]},
-    {"domain": "modernisedfurniture.com", "premium": False, "link": "https://domanid.com/#all", "description": "Brandable domain for modern furniture and home decor e-commerce. Memorable and stylish.", "keywords": ["furniture", "modern", "decor", "home", "interior design", "furnishings", "home improvement"]},
-    {"domain": "nurseslicenses.com", "premium": False, "link": "https://domanid.com/#all", "description": "Keyword-rich domain for nursing license resources. Strong SEO for professional certification.", "keywords": ["nurse", "nursing", "license", "certification", "healthcare", "medical education", "nursing license"]},
-    {"domain": "rentalcarcharlotte.com", "premium": False, "link": "https://domanid.com/#all", "description": "Targeted domain for Charlotte car rentals. Local SEO-optimized for travel and tourism.", "keywords": ["car rental", "charlotte", "rental car", "travel", "transportation", "rent a car"]},
-    {"domain": "rosedeliver.com", "premium": False, "link": "https://domanid.com/#all", "description": "Elegant domain for flower and gift delivery services. Memorable and brandable for local markets.", "keywords": ["roses", "flower delivery", "gift", "florist", "delivery", "bouquet", "flower"]},
-    {"domain": "singaporetravelagent.com", "premium": False, "link": "https://domanid.com/#all", "description": "Professional domain for Singapore travel agencies. SEO-rich for tourism and vacation packages.", "keywords": ["singapore", "travel", "travel agent", "tourism", "vacation", "travel agency", "tour"]},
-    {"domain": "thebostonhouse.com", "premium": False, "link": "https://domanid.com/#all", "description": "Targeted domain for Boston real estate and rental brands. Local SEO-friendly and memorable.", "keywords": ["boston", "real estate", "house", "home", "property", "rental", "realtor", "housing"]},
-    {"domain": "unitehealthinsurance.com", "premium": False, "link": "https://domanid.com/#all", "description": "Strong brandable domain for health insurance providers. Builds trust and drives conversions.", "keywords": ["health insurance", "insurance", "healthcare", "medical", "coverage", "health plan", "benefits"]},
-    {"domain": "windowtintingvegas.com", "premium": False, "link": "https://domanid.com/#all", "description": "Local business domain for Las Vegas window tinting. SEO-rich and service-focused branding.", "keywords": ["window tinting", "las vegas", "auto tint", "window film", "car tint", "tint"]},
-    {"domain": "womanclothesstore.com", "premium": False, "link": "https://domanid.com/#all", "description": "E-commerce domain for women's clothing. SEO-friendly, brandable, and fashion-focused.", "keywords": ["women", "clothing", "fashion", "apparel", "ecommerce", "store", "style", "wardrobe"]},
-]
 
-CATEGORY_BOOSTS = {
-    "legal": ["attorneyauto.com", "lawyerslegaladvice.com", "bestlawyercaraccident.com", "lawyeremploymentdiscrimination.com"],
-    "law": ["attorneyauto.com", "lawyerslegaladvice.com", "bestlawyercaraccident.com", "lawyeremploymentdiscrimination.com"],
-    "technology": ["digitately.com"],
-    "tech": ["digitately.com"],
-    "digital": ["digitately.com"],
-    "travel": ["besteuropevacations.com", "hotelsmajorca.com", "singaporetravelagent.com", "besteuropevacations.com"],
-    "tourism": ["besteuropevacations.com", "hotelsmajorca.com", "singaporetravelagent.com"],
-    "health": ["clinicvictoria.com", "dentalimplantsservice.com", "unitehealthinsurance.com", "lifeinsuranceinstantly.com", "nurseslicenses.com"],
-    "medical": ["dentalimplantsservice.com", "clinicvictoria.com", "unitehealthinsurance.com"],
-    "dental": ["dentalimplantsservice.com"],
-    "seo": ["attorneyauto.com", "bestlawyercaraccident.com", "dentalimplantsservice.com", "poolcleanermiami.com"],
-    "real estate": ["gilbertarizonahome.com", "thebostonhouse.com"],
-    "insurance": ["lifeinsuranceinstantly.com", "unitehealthinsurance.com"],
-    "ecommerce": ["bestdeodorants.com", "buyslivercoins.com", "womanclothesstore.com", "modernisedfurniture.com", "rosedeliver.com", "flowershopboston.com"],
-    "retail": ["bestdeodorants.com", "womanclothesstore.com", "flowershopboston.com", "rosedeliver.com"],
-    "automotive": ["attorneyauto.com", "chevroletdealership.com", "rentalcarcharlotte.com", "cardrivinginstructors.com", "windowtintingvegas.com"],
-    "car": ["attorneyauto.com", "chevroletdealership.com", "rentalcarcharlotte.com", "cardrivinginstructors.com", "bestlawyercaraccident.com"],
-    "business": ["companyinspector.com", "createproposal.com", "digitately.com"],
-    "startup": ["digitately.com", "createproposal.com"],
-    "investment": ["buyslivercoins.com", "attorneyauto.com"],
-    "branding": ["digitately.com", "attorneyauto.com"],
-    "fashion": ["womanclothesstore.com", "modernisedfurniture.com"],
-    "home": ["gilbertarizonahome.com", "thebostonhouse.com", "modernisedfurniture.com", "garagefloortiling.com"],
-    "local": ["poolcleanermiami.com", "windowtintingvegas.com", "flowershopboston.com", "rentalcarcharlotte.com", "garagefloortiling.com", "hotelsvictorville.com", "thebostonhouse.com", "gilbertarizonahome.com"],
-    "domain": [],  # all domains are related to domains, skip broad match
+PROJECT_ROOT = Path(__file__).resolve().parent
+ARTICLES_DIR = PROJECT_ROOT / "articles"
+DOMAINS_FILE = PROJECT_ROOT / "data" / "domains.json"
+
+START_MARKER = "<!-- DOMANID_RELATED_DOMAINS_START -->"
+END_MARKER = "<!-- DOMANID_RELATED_DOMAINS_END -->"
+
+STOP_WORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "by",
+    "for", "from", "has", "in", "is", "it", "its",
+    "of", "on", "or", "that", "the", "this", "to",
+    "with", "your", "you", "how", "why", "what",
+    "domain", "domains", "com", "website", "online",
+    "digital", "business",
 }
 
 
-def extract_title_category_content(html_content):
-    title_match = re.search(r'<title>(.*?)\s*-\s*DomanID</title>', html_content, re.IGNORECASE)
-    title = title_match.group(1) if title_match else ""
+def clean_text(value: Any) -> str:
+    if value is None:
+        return ""
 
-    cat_match = re.search(r'<span class="article-meta">([^|]+?)\s*\|', html_content)
-    category = cat_match.group(1).strip() if cat_match else ""
+    return re.sub(
+        r"\s+",
+        " ",
+        str(value).strip(),
+    )
 
-    kw_match = re.search(r'<meta name="keywords" content="([^"]+)">', html_content)
-    keywords = kw_match.group(1).strip() if kw_match else ""
 
-    body_match = re.search(r'<div class="article-body">(.*?)</div>\s*', html_content, re.DOTALL)
-    body_text = ""
+def tokenize(value: str) -> set[str]:
+    words = re.findall(
+        r"[a-z0-9]+",
+        value.lower(),
+    )
+
+    return {
+        word
+        for word in words
+        if len(word) >= 3
+        and word not in STOP_WORDS
+    }
+
+
+def load_domains() -> list[dict[str, Any]]:
+    if not DOMAINS_FILE.exists():
+        raise FileNotFoundError(
+            f"Missing domain inventory: {DOMAINS_FILE}"
+        )
+
+    payload = json.loads(
+        DOMAINS_FILE.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    domains = payload.get("domains", [])
+
+    if not isinstance(domains, list):
+        raise RuntimeError(
+            "Invalid domains.json: domains must be a list."
+        )
+
+    return [
+        domain
+        for domain in domains
+        if clean_text(
+            domain.get("status", "")
+        ).lower() == "active"
+    ]
+
+
+def extract_article_data(
+    html_content: str,
+) -> dict[str, str]:
+
+    title_match = re.search(
+        r"<title>(.*?)</title>",
+        html_content,
+        re.I | re.S,
+    )
+
+    title = clean_text(
+        title_match.group(1)
+        if title_match
+        else ""
+    )
+
+    title = re.sub(
+        r"\s*[-|]\s*DomanID.*$",
+        "",
+        title,
+        flags=re.I,
+    )
+
+    category_match = re.search(
+        r'class=["\']article-meta["\'][^>]*>'
+        r'(.*?)</',
+        html_content,
+        re.I | re.S,
+    )
+
+    category = ""
+
+    if category_match:
+        category = re.sub(
+            r"<[^>]+>",
+            " ",
+            category_match.group(1),
+        )
+
+        category = clean_text(
+            category.split("|")[0]
+        )
+
+    keywords_match = re.search(
+        r'<meta\s+name=["\']keywords["\']\s+'
+        r'content=["\']([^"\']+)["\']',
+        html_content,
+        re.I,
+    )
+
+    keywords = clean_text(
+        keywords_match.group(1)
+        if keywords_match
+        else ""
+    )
+
+    body_match = re.search(
+        r'<div\s+class=["\']article-body["\'][^>]*>'
+        r'(.*?)'
+        r'</div>',
+        html_content,
+        re.I | re.S,
+    )
+
+    body = ""
+
     if body_match:
-        body_text = re.sub(r'<[^>]+>', ' ', body_match.group(1))
-        body_text = re.sub(r'\s+', ' ', body_text).strip().lower()
+        body = re.sub(
+            r"<[^>]+>",
+            " ",
+            body_match.group(1),
+        )
 
-    return title, category, keywords, body_text
+        body = html_mod.unescape(body)
+        body = clean_text(body)
+
+    return {
+        "title": title,
+        "category": category,
+        "keywords": keywords,
+        "body": body,
+    }
 
 
-def score_domain(domain_info, title, category, keywords, body_text):
+def infer_article_category(
+    article: dict[str, str],
+) -> str:
+    pseudo_domain = {
+        "domain": article["title"],
+        "description": (
+            f"{article['category']} "
+            f"{article['keywords']} "
+            f"{article['body'][:2500]}"
+        ),
+    }
+
+    return infer_domain_category(
+        pseudo_domain
+    )
+
+
+def domain_search_text(
+    domain: dict[str, Any],
+) -> str:
+    return clean_text(
+        f"{domain.get('domain', '')} "
+        f"{domain.get('description', '')}"
+    )
+
+
+def score_domain(
+    domain: dict[str, Any],
+    article: dict[str, str],
+) -> int:
+
+    domain_tokens = tokenize(
+        domain_search_text(domain)
+    )
+
+    title_tokens = tokenize(
+        article["title"]
+    )
+
+    category_tokens = tokenize(
+        article["category"]
+    )
+
+    keyword_tokens = tokenize(
+        article["keywords"]
+    )
+
+    body_tokens = tokenize(
+        article["body"]
+    )
+
     score = 0
-    domain_name = domain_info["domain"]
-    kw_list = domain_info["keywords"]
-    title_lower = title.lower()
-    category_lower = category.lower()
-    keywords_lower = keywords.lower()
 
-    for kw in kw_list:
-        kw_lower = kw.lower()
-        if kw_lower in title_lower:
-            score += 5
-        if kw_lower in category_lower:
-            score += 4
-        if kw_lower in keywords_lower:
-            score += 3
-        if body_text and kw_lower in body_text:
-            score += 1
+    score += (
+        len(domain_tokens & title_tokens)
+        * 8
+    )
 
-    for cat_key, domains in CATEGORY_BOOSTS.items():
-        if cat_key in category_lower or cat_key in title_lower:
-            if domain_name in domains:
-                score += 4
+    score += (
+        len(domain_tokens & category_tokens)
+        * 6
+    )
 
-    if domain_info["premium"]:
-        score += 2
+    score += (
+        len(domain_tokens & keyword_tokens)
+        * 5
+    )
+
+    score += (
+        len(domain_tokens & body_tokens)
+        * 1
+    )
+
+    article_category = (
+        infer_article_category(article)
+    )
+
+    domain_category = (
+        infer_domain_category(domain)
+    )
+
+    if (
+        article_category != "general"
+        and article_category == domain_category
+    ):
+        score += 10
+
+    if bool(domain.get("featured")):
+        score += 1
 
     return score
 
 
-def get_domain_card_html(d):
-    premium_badge = '<span class="premium-badge">Premium</span>' if d["premium"] else ""
-    return f'''
-            <a href="{d['link']}" class="domain-card-inline" target="_blank">
+def find_related_domains(
+    article: dict[str, str],
+    domains: list[dict[str, Any]],
+    limit: int = 3,
+) -> list[dict[str, Any]]:
+
+    scored: list[
+        tuple[int, str, dict[str, Any]]
+    ] = []
+
+    for domain in domains:
+        score = score_domain(
+            domain,
+            article,
+        )
+
+        if score <= 0:
+            continue
+
+        scored.append(
+            (
+                score,
+                clean_text(
+                    domain.get("domain", "")
+                ),
+                domain,
+            )
+        )
+
+    scored.sort(
+        key=lambda item: (
+            -item[0],
+            item[1],
+        )
+    )
+
+    return [
+        domain
+        for _, _, domain
+        in scored[:limit]
+    ]
+
+
+def render_domain_card(
+    domain: dict[str, Any],
+) -> str:
+
+    name = clean_text(
+        domain.get("domain", "")
+    )
+
+    slug = clean_text(
+        domain.get("slug", "")
+    )
+
+    description = clean_text(
+        domain.get("description", "")
+    )
+
+    badge = ""
+
+    if bool(domain.get("featured")):
+        badge = (
+            '<span class="premium-badge">'
+            'Premium'
+            '</span>'
+        )
+
+    return f"""
+            <a
+                href="../domains/{html_mod.escape(slug)}/"
+                class="domain-card-inline"
+            >
                 <div class="domain-card-header">
-                    <span class="domain-name">{d['domain']}</span>
-                    {premium_badge}
+                    <span class="domain-name">
+                        {html_mod.escape(name)}
+                    </span>
+
+                    {badge}
                 </div>
-                <p class="domain-desc">{html_mod.escape(d['description'])}</p>
-                <span class="domain-cta">Explore Domain &rarr;</span>
-            </a>'''
+
+                <p class="domain-desc">
+                    {html_mod.escape(description)}
+                </p>
+
+                <span class="domain-cta">
+                    View Domain &rarr;
+                </span>
+            </a>
+""".rstrip()
 
 
-def get_related_domains_html(title, category, keywords, body_text, max_domains=3):
-    scored = []
-    for d in DOMAINS_DATA:
-        s = score_domain(d, title, category, keywords, body_text)
-        if s > 0:
-            scored.append((s, d))
+def render_related_block(
+    article: dict[str, str],
+    domains: list[dict[str, Any]],
+) -> str:
 
-    scored.sort(key=lambda x: x[0], reverse=True)
-    selected = [d for _, d in scored[:max_domains]]
+    related = find_related_domains(
+        article,
+        domains,
+        limit=3,
+    )
 
-    if not selected:
+    if not related:
         return ""
 
-    cards = "".join(get_domain_card_html(d) for d in selected)
-    return f'''
+    cards = "\n".join(
+        render_domain_card(domain)
+        for domain in related
+    )
+
+    return f"""
+{START_MARKER}
         <div class="related-premium-domains">
-            <h3>Related Premium Domains</h3>
-            <p class="section-subtitle">Domain names that complement this topic</p>
-            <div class="domains-inline-grid">{cards}
+
+            <h3>
+                Related Domains
+            </h3>
+
+            <p class="section-subtitle">
+                Available domain names related to this topic
+            </p>
+
+            <div class="domains-inline-grid">
+{cards}
             </div>
-        </div>'''
+
+        </div>
+{END_MARKER}
+""".strip()
 
 
-def inject_related_domains(filepath):
-    with open(filepath, "r", encoding="utf-8", errors="replace") as f:
-        content = f.read()
+def remove_existing_related_block(
+    content: str,
+) -> str:
 
-    if 'class="related-premium-domains"' in content:
-        print(f"  Skipped (already has related domains): {filepath}")
-        return
+    managed_pattern = re.compile(
+        re.escape(START_MARKER)
+        + r".*?"
+        + re.escape(END_MARKER),
+        re.S,
+    )
 
-    title, category, keywords, body_text = extract_title_category_content(content)
-    related_html = get_related_domains_html(title, category, keywords, body_text)
+    content = managed_pattern.sub(
+        "",
+        content,
+    )
 
-    if not related_html:
-        print(f"  Skipped (no matching domains): {filepath}")
-        return
+    # Remove blocks generated by the old hard-coded script.
+    legacy_pattern = re.compile(
+        r'\s*<div\s+class=["\']'
+        r'related-premium-domains["\']'
+        r'.*?'
+        r'(?=<div\s+class=["\']cta-box["\'])',
+        re.I | re.S,
+    )
 
-    cta_patterns = [
-        (r'<div class="cta-box">', '<div class="cta-box">'),
-        (r'<div style="margin-top: 50px; padding: 30px; background: var\(--primary-50\);\s*border: 1px solid var\(--primary-200\);\s*border-radius: 20px;\s*text-align: center;">', '<div style="margin-top: 50px; padding: 30px; background: var(--primary-50); border: 1px solid var(--primary-200); border-radius: 20px; text-align: center;">'),
-    ]
-    new_content = content
-    for pattern, replacement in cta_patterns:
-        new_content = re.sub(pattern, related_html + "\n\n            " + replacement, new_content, count=1)
-        if new_content != content:
-            break
+    content = legacy_pattern.sub(
+        "\n",
+        content,
+    )
 
-    if new_content == content:
-        print(f"  WARNING: Could not find CTA in: {filepath}")
-        return
-
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.write(new_content)
-
-    print(f"  Injected related domains: {filepath}")
+    return content
 
 
-def update_template():
-    if not os.path.exists(TEMPLATE_PATH):
-        print(f"Template not found: {TEMPLATE_PATH}")
-        return
+def insert_related_block(
+    content: str,
+    block: str,
+) -> str:
 
-    with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
-        content = f.read()
+    if not block:
+        return content
 
-    if "{{RELATED_DOMAINS}}" in content:
-        print("Template already has {{RELATED_DOMAINS}} placeholder.")
-    else:
-        content = content.replace("<!-- CTA -->", "            {{RELATED_DOMAINS}}\n\n            <!-- CTA -->")
-        with open(TEMPLATE_PATH, "w", encoding="utf-8") as f:
-            f.write(content)
-        print("Added {{RELATED_DOMAINS}} placeholder to template.")
+    cta_match = re.search(
+        r'<div\s+class=["\']cta-box["\']',
+        content,
+        re.I,
+    )
 
-    css_block = """.related-premium-domains {
-    margin: 40px 0;
-}
-.related-premium-domains h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    color: var(--text-heading);
-    margin-bottom: 8px;
-    text-align: center;
-}
-.section-subtitle {
-    text-align: center;
-    color: var(--text-muted);
-    margin-bottom: 24px;
-    font-size: 1rem;
-}
-.domains-inline-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 20px;
-}
-.domain-card-inline {
-    display: block;
-    padding: 24px;
-    background: linear-gradient(135deg, rgba(12, 74, 110, 0.08), rgba(8, 47, 73, 0.05));
-    border: 1px solid var(--border-light);
-    border-radius: 16px;
-    text-decoration: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.domain-card-inline:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-500);
-}
-.domain-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 8px;
-}
-.domain-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--text-heading);
-    word-break: break-all;
-}
-.premium-badge {
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #111827;
-    white-space: nowrap;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-.domain-desc {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin: 0 0 12px;
-}
-.domain-cta {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--primary-500);
-}
-@media (max-width: 480px) {
-    .domains-inline-grid {
-        grid-template-columns: 1fr;
-    }
-    .domain-card-inline {
-        padding: 16px;
-    }
-}"""
+    if cta_match:
+        position = cta_match.start()
 
-    if ".related-premium-domains" in content:
-        print("Template CSS already has .related-premium-domains styles.")
-    else:
-        content = content.replace("</style>", css_block + "\n    </style>")
-        with open(TEMPLATE_PATH, "w", encoding="utf-8") as f:
-            f.write(content)
-        print("Added .related-premium-domains CSS to template.")
+        return (
+            content[:position]
+            + block
+            + "\n\n            "
+            + content[position:]
+        )
+
+    footer_match = re.search(
+        r"</article>|</main>",
+        content,
+        re.I,
+    )
+
+    if footer_match:
+        position = footer_match.start()
+
+        return (
+            content[:position]
+            + block
+            + "\n"
+            + content[position:]
+        )
+
+    return content
 
 
-def main():
-    print("=== Inject Related Premium Domains into Articles ===\n")
+def process_article(
+    filepath: Path,
+    domains: list[dict[str, Any]],
+    dry_run: bool = False,
+) -> bool:
 
-    print("1. Updating template...")
-    update_template()
+    original = filepath.read_text(
+        encoding="utf-8",
+        errors="replace",
+    )
+
+    article = extract_article_data(
+        original
+    )
+
+    cleaned = remove_existing_related_block(
+        original
+    )
+
+    block = render_related_block(
+        article,
+        domains,
+    )
+
+    # True idempotency:
+    # if the currently generated managed block is already
+    # present exactly as expected, do not rewrite the file.
+    if (
+        block
+        and START_MARKER in original
+        and END_MARKER in original
+        and block in original
+    ):
+        return False
+
+    updated = insert_related_block(
+        cleaned,
+        block,
+    )
+
+    if updated == original:
+        return False
+
+    if not dry_run:
+        filepath.write_text(
+            updated,
+            encoding="utf-8",
+            newline="\n",
+        )
+
+    return True
+
+
+def main() -> int:
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help=(
+            "Calculate changes without writing article files."
+        ),
+    )
+
+    args = parser.parse_args()
+
     print()
+    print(
+        "DomanID - Dynamic Article Domain Linker"
+    )
+    print("Phase 1H")
+    print("-" * 60)
 
-    print("2. Processing existing articles...")
-    if not os.path.exists(ARTICLES_DIR):
-        print(f"Articles directory not found: {ARTICLES_DIR}")
-        return
+    domains = load_domains()
 
-    files = sorted(os.listdir(ARTICLES_DIR))
-    html_files = [f for f in files if f.endswith(".html") and f != "index.html"]
-    print(f"Found {len(html_files)} article files.")
+    print(
+        f"[INFO] Active domains: {len(domains)}"
+    )
 
-    updated = 0
-    for fname in html_files:
-        filepath = os.path.join(ARTICLES_DIR, fname)
-        prev_content = open(filepath, "r", encoding="utf-8", errors="replace").read()
-        inject_related_domains(filepath)
-        new_content = open(filepath, "r", encoding="utf-8", errors="replace").read()
-        if prev_content != new_content:
-            updated += 1
+    article_files = sorted(
+        path
+        for path in ARTICLES_DIR.glob("*.html")
+        if path.name.lower() != "index.html"
+    )
 
-    print(f"\nUpdated {updated} of {len(html_files)} articles.")
-    print("Done.")
+    print(
+        f"[INFO] Articles found: {len(article_files)}"
+    )
+
+    changed = 0
+
+    for filepath in article_files:
+
+        if process_article(
+            filepath,
+            domains,
+            dry_run=args.dry_run,
+        ):
+            changed += 1
+
+            prefix = (
+                "[WOULD UPDATE]"
+                if args.dry_run
+                else "[UPDATED]"
+            )
+
+            print(
+                f"{prefix} {filepath.name}"
+            )
+
+    print()
+    print("=" * 60)
+    print(
+        f"Articles processed : {len(article_files)}"
+    )
+    print(
+        f"Articles changed   : {changed}"
+    )
+    print(
+        f"Dry run            : {args.dry_run}"
+    )
+    print("=" * 60)
+
+    if args.dry_run:
+        print(
+            "[PASS] Dry-run completed. No files changed."
+        )
+    else:
+        print(
+            "[PASS] Dynamic article-domain linking completed."
+        )
+
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

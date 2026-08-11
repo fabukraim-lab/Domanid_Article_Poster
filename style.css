@@ -1157,3 +1157,246 @@ body {
         color: #000 !important;
     }
 }
+
+/* ==========================================================
+   DOMANID HOMEPAGE DOMAIN CARDS
+   Phase 1F Visual Optimization
+   ========================================================== */
+
+#premiumGrid,
+#allGrid {
+    max-width: 1180px;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    align-items: stretch;
+}
+
+#premiumGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#premiumGrid .domain-card,
+#allGrid .domain-card {
+    padding: 24px;
+    min-width: 0;
+    height: 100%;
+}
+
+#premiumGrid .domain-name,
+#allGrid .domain-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem !important;
+    line-height: 1.25;
+    margin: 0;
+    direction: ltr;
+    text-align: left;
+
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+#premiumGrid .domain-name a,
+#allGrid .domain-name a {
+    color: var(--text-heading);
+    text-decoration: none;
+}
+
+#premiumGrid .domain-name a:hover,
+#allGrid .domain-name a:hover {
+    color: var(--primary-600);
+}
+
+.domain-card-description {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin: 16px 0 22px;
+    flex-grow: 1;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+#premiumGrid .domain-card {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 251, 235, 0.95) 0%,
+            var(--bg-white) 70%
+        );
+
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+#premiumGrid .domain-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--accent-400),
+            var(--primary-500)
+        );
+}
+
+#premiumGrid .premium-badge {
+    position: static;
+    flex-shrink: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent-400),
+            var(--accent-600)
+        );
+
+    color: var(--text-heading);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 4px 9px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+#premiumGrid .btn-glow,
+#allGrid .btn-glow {
+    margin-top: auto;
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+    font-size: 0.88rem;
+}
+
+#allGrid .domain-card {
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+#allGrid .domain-card:hover {
+    transform: translateY(-4px);
+}
+
+@media (max-width: 1000px) {
+    #premiumGrid,
+    #allGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 820px;
+    }
+}
+
+@media (max-width: 650px) {
+    #premiumGrid,
+    #allGrid {
+        grid-template-columns: 1fr;
+        max-width: 520px;
+        gap: 16px;
+    }
+
+    #premiumGrid .domain-card,
+    #allGrid .domain-card {
+        padding: 20px;
+    }
+
+    #premiumGrid .domain-name,
+    #allGrid .domain-name {
+        font-size: 1.2rem !important;
+    }
+
+    .domain-card-description {
+        -webkit-line-clamp: 3;
+    }
+}
+
+/* ==========================================================
+   DOMANID HOMEPAGE FINAL RESPONSIVE TUNING
+   Phase 1F.2
+   ========================================================== */
+
+@media (max-width: 650px) {
+
+    /* Keep premium domains comfortable and prominent */
+    #premiumGrid {
+        grid-template-columns: 1fr;
+        max-width: 440px;
+        gap: 12px;
+    }
+
+    /* Compact inventory: two columns on phones */
+    #allGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 100%;
+        gap: 10px;
+    }
+
+    #allGrid .domain-card {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    #allGrid .domain-name {
+        font-size: 0.92rem !important;
+        line-height: 1.2;
+        min-height: 2.4em;
+    }
+
+    #allGrid .domain-card-description {
+        font-size: 0.76rem;
+        line-height: 1.45;
+        margin: 10px 0 12px;
+        -webkit-line-clamp: 3;
+    }
+
+    #allGrid .btn-glow {
+        height: 34px;
+        padding: 0 8px;
+        font-size: 0.72rem;
+        border-radius: 7px;
+    }
+
+    #premiumGrid .domain-card {
+        padding: 16px;
+    }
+
+    #premiumGrid .domain-name {
+        font-size: 1.05rem !important;
+    }
+
+    #premiumGrid .domain-card-description {
+        font-size: 0.84rem;
+        margin: 10px 0 14px;
+    }
+
+    #premiumGrid .btn-glow {
+        height: 36px;
+        font-size: 0.78rem;
+    }
+
+    #premiumGrid .premium-badge {
+        font-size: 0.55rem;
+        padding: 3px 7px;
+    }
+
+    #premium,
+    #domains {
+        padding-top: 55px;
+        padding-bottom: 55px;
+    }
+}

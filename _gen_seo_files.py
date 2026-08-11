@@ -1,5 +1,5 @@
 """Generate initial sitemap.xml and rss.xml from CSV data."""
-import csv, io, os, datetime
+import csv, io, os, datetime, json
 
 ARTICLES_DIR = "articles"
 
@@ -45,6 +45,35 @@ for path, pri, freq in static:
 
 for art in articles:
     urls.append(f'  <url>\n    <loc>{base}/articles/{art["slug"]}.html</loc>\n    <priority>0.6</priority>\n  </url>')
+
+
+# Add active domain pages from normalized domain inventory
+domains_data_file = os.path.join("data", "domains.json")
+
+if os.path.exists(domains_data_file):
+    try:
+        with open(domains_data_file, encoding="utf-8") as f:
+            domains_payload = json.load(f)
+
+        for domain in domains_payload.get("domains", []):
+            if str(domain.get("status", "")).lower() != "active":
+                continue
+
+            slug = str(domain.get("slug", "")).strip()
+
+            if not slug:
+                continue
+
+            urls.append(
+                f"  <url>\n"
+                f"    <loc>{base}/domains/{slug}/</loc>\n"
+                f"    <priority>0.8</priority>\n"
+                f"    <changefreq>weekly</changefreq>\n"
+                f"  </url>"
+            )
+
+    except Exception as exc:
+        print(f"Warning: could not add domain pages to sitemap: {exc}")
 
 with open("sitemap.xml", "w", encoding="utf-8") as f:
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n')

@@ -47,17 +47,17 @@ const MOCK_SOLD = [
 function parseCSV(csvText) {
     const lines = csvText.split(/\r?\n/);
     const result = [];
-    
+
     // Simple but robust CSV line parser for quoted strings
     const parseCSVLine = (text) => {
         const row = [];
         let inQuotes = false;
         let currentValue = '';
-        
+
         for (let i = 0; i < text.length; i++) {
             const char = text[i];
             const nextChar = text[i + 1];
-            
+
             if (char === '"' && inQuotes && nextChar === '"') {
                 currentValue += '"'; // Escaped quote
                 i++;
@@ -78,12 +78,12 @@ function parseCSV(csvText) {
     for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
         const columns = parseCSVLine(lines[i]);
-        
+
         // We expect columns: [Title, Description, Link, ...]
         // Clean and format the link
         let rawLink = columns[2] || '#';
         let formattedLink = rawLink;
-        
+
         // If it's a domain name (no protocol and contains a dot), prepend https://
         if (rawLink !== '#' && !rawLink.startsWith('http') && rawLink.includes('.')) {
             formattedLink = `https://${rawLink}`;
@@ -106,10 +106,10 @@ function createDomainCard(domain, isPremium = false) {
     card.className = 'domain-card glass-panel';
     card.setAttribute('itemscope', '');
     card.setAttribute('itemtype', 'https://schema.org/Product');
-    
+
     const domainTitle = domain.title || domain.domain || 'Unknown.com';
     const domainDescription = domain.description || domain.price || 'A premium digital asset.';
-    
+
     card.innerHTML = `
         <div class="domain-header" style="flex-direction: column; align-items: flex-start; gap: 10px;">
             <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
@@ -130,7 +130,7 @@ function createDomainCard(domain, isPremium = false) {
         </a>
         <link itemprop="availability" href="https://schema.org/InStock">
     `;
-    
+
     return card;
 }
 
@@ -140,12 +140,12 @@ function createDomainCard(domain, isPremium = false) {
 function renderDomains(domains, gridElementId, isPremium) {
     const grid = document.getElementById(gridElementId);
     if (!grid) return;
-    
+
     if (domains.length === 0) {
         grid.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color: var(--text-muted);">No domains found matching criteria.</p>`;
         return;
     }
-    
+
     grid.innerHTML = ''; // Clear existing content
     domains.forEach(d => grid.appendChild(createDomainCard(d, isPremium)));
 }
@@ -156,7 +156,7 @@ function renderDomains(domains, gridElementId, isPremium) {
 async function loadDomains() {
     const premiumLoader = document.getElementById('premiumLoader');
     const allLoader = document.getElementById('allLoader');
-    
+
     if(premiumLoader) premiumLoader.style.display = 'block';
     if(allLoader) allLoader.style.display = 'block';
 
@@ -193,7 +193,7 @@ async function loadDomains() {
         console.error("Failed to load All Domains:", err);
         allDomains = MOCK_ALL;
     }
-    
+
     if(premiumLoader) premiumLoader.style.display = 'none';
     if(allLoader) allLoader.style.display = 'none';
 
@@ -203,52 +203,56 @@ async function loadDomains() {
 
 /**
  * Search Functionality
+ * Filters the statically generated domain cards already present in index.html.
  */
 const handleSearch = debounce(function() {
-    const query = document.getElementById('searchInput').value.toLowerCase().trim();
-    
-    if (!query) {
-        renderDomains(premiumDomains, 'premiumGrid', true);
-        renderDomains(allDomains, 'allGrid', false);
-        renderDomains(MOCK_SOLD, 'soldGrid', false);
-        return;
+    const searchInput = document.getElementById('searchInput');
+
+    if (!searchInput) return;
+
+    const query = searchInput.value.toLowerCase().trim();
+
+    if (
+        query.length >= 2 &&
+        typeof gtag === 'function'
+    ) {
+        gtag('event', 'search', {
+            search_term: query
+        });
     }
-    
-    // Track search query (only if meaningful length)
-    if (query.length >= 2 && typeof gtag === 'function') {
-        gtag('event', 'search', { search_term: query });
-    }
-    
-    const filteredPremium = premiumDomains.filter(d => 
-        (d.title || d.domain || '').toLowerCase().includes(query) || 
-        (d.description || d.price || '').toLowerCase().includes(query)
+
+    const cards = document.querySelectorAll(
+        '.domain-card[data-domain]'
     );
-    
-    const filteredAll = allDomains.filter(d => 
-        (d.title || d.domain || '').toLowerCase().includes(query) || 
-        (d.description || d.price || '').toLowerCase().includes(query)
-    );
-    
-    renderDomains(filteredPremium, 'premiumGrid', true);
-    renderDomains(filteredAll, 'allGrid', false);
-    
-    // Render Recently Sold
-    const filteredSold = MOCK_SOLD.filter(d => 
-        (d.title || d.domain || '').toLowerCase().includes(query) || 
-        (d.description || d.price || '').toLowerCase().includes(query)
-    );
-    renderDomains(filteredSold, 'soldGrid', false);
+
+    cards.forEach(card => {
+        const domain = (
+            card.dataset.domain || ''
+        ).toLowerCase();
+
+        const description = (
+            card.dataset.description || ''
+        ).toLowerCase();
+
+        const match =
+            !query ||
+            domain.includes(query) ||
+            description.includes(query);
+
+        card.style.display = match ? '' : 'none';
+    });
 }, 300);
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    loadDomains();
-    
+    // Domains are now statically generated into index.html.
+    // No client-side Google Sheets fetch is required.
+
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('input', handleSearch);
     }
-    
+
     const searchBtn = document.getElementById('searchBtn');
     if (searchBtn) {
         searchBtn.addEventListener('click', function() {
@@ -263,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu Toggle
     const mobileMenu = document.getElementById('mobile-menu');
     const navLinks = document.querySelector('.nav-links');
-    
+
     if (mobileMenu && navLinks) {
         mobileMenu.addEventListener('click', () => {
             mobileMenu.classList.toggle('is-active');

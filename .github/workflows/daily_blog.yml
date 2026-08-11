@@ -32,16 +32,24 @@ jobs:
       run: |
         python -c "import requests; print('Requests version:', requests.__version__)"
 
-    - name: Run Blog Generator Script
+    - name: Run DomanID Daily Build
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      run: python blog_generator.py
+      run: python build_site.py --daily
 
-    - name: Commit and Push New Article
+    - name: Commit and Push Site Updates
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add articles/
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-published daily article" && git push)
+
+        git add -A
+
+        if git diff --staged --quiet; then
+          echo "No site changes detected."
+          exit 0
+        fi
+
+        git commit -m "Daily DomanID site sync"
+        git push
