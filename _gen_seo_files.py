@@ -45,6 +45,7 @@ static = [
     ("terms.html", 0.3, "yearly"),
     ("privacy.html", 0.3, "yearly"),
     ("articles/index.html", 0.9, "daily"),
+    ("domains/", 0.9, "weekly"),
 ]
 
 urls = []

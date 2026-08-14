@@ -20,6 +20,7 @@ instead of downloading the latest domain inventory.
 from __future__ import annotations
 
 import argparse
+import re
 import json
 import subprocess
 import sys
@@ -39,6 +40,7 @@ INDEX_FILE = PROJECT_ROOT / "index.html"
 SITEMAP_FILE = PROJECT_ROOT / "sitemap.xml"
 RSS_FILE = PROJECT_ROOT / "rss.xml"
 ARTICLES_DIR = PROJECT_ROOT / "articles"
+DOMAINS_INDEX_FILE = PROJECT_ROOT / "domains" / "index.html"
 
 
 # ============================================================
@@ -62,6 +64,12 @@ PIPELINE = [
         "Homepage",
         [
             "generators/homepage_generator.py",
+        ],
+    ),
+    (
+        "Domains inventory",
+        [
+            "generators/domains_index_generator.py",
         ],
     ),
     (
@@ -317,9 +325,11 @@ def validate_build() -> dict[str, int]:
         )
     )
 
+    # Homepage is intentionally Premium-only.
+    # The complete inventory is published separately
+    # under /domains/.
     expected_homepage_cards = (
-        len(active_domains)
-        + featured_count
+        featured_count
     )
 
     if (
@@ -330,6 +340,47 @@ def validate_build() -> dict[str, int]:
             "Homepage domain-card count mismatch: "
             f"expected {expected_homepage_cards}, "
             f"found {homepage_domain_cards}."
+        )
+
+    # --------------------------------------------------------
+    # Full domains inventory page
+    # --------------------------------------------------------
+
+    if not DOMAINS_INDEX_FILE.exists():
+        errors.append(
+            "domains/index.html is missing."
+        )
+        domains_index_text = ""
+    else:
+        domains_index_text = (
+            DOMAINS_INDEX_FILE.read_text(
+                encoding="utf-8"
+            )
+        )
+
+    domains_inventory_cards = len(
+        re.findall(
+            r'class=["\']inventory-card'
+            r'(?:\s+inventory-card-premium)?["\']',
+            domains_index_text,
+            flags=re.I,
+        )
+    )
+
+    if (
+        domains_inventory_cards
+        != len(active_domains)
+    ):
+        errors.append(
+            "Domains inventory card count mismatch: "
+            f"expected {len(active_domains)}, "
+            f"found {domains_inventory_cards}."
+        )
+
+    if "{{DOMAIN_" in domains_index_text:
+        errors.append(
+            "Unresolved domain inventory template "
+            "placeholder found."
         )
 
     # --------------------------------------------------------
@@ -350,9 +401,14 @@ def validate_build() -> dict[str, int]:
             )
         )
 
-    sitemap_domain_urls = (
-        sitemap_text.count(
-            "/domains/"
+    sitemap_domain_urls = len(
+        re.findall(
+            r"<loc>"
+            r"https://domanid\.com/domains/"
+            r"[^<]+/"
+            r"</loc>",
+            sitemap_text,
+            flags=re.I,
         )
     )
 
@@ -447,6 +503,11 @@ def validate_build() -> dict[str, int]:
     )
 
     print(
+        f"Inventory cards       : "
+        f"{domains_inventory_cards}"
+    )
+
+    print(
         f"Sitemap domain URLs   : "
         f"{sitemap_domain_urls}"
     )
@@ -492,6 +553,9 @@ def validate_build() -> dict[str, int]:
         ),
         "homepage_cards": (
             homepage_domain_cards
+        ),
+        "inventory_cards": (
+            domains_inventory_cards
         ),
         "sitemap_domains": (
             sitemap_domain_urls

@@ -60,7 +60,7 @@
     <link rel="preconnect" href="https://pagead2.googlesyndication.com">
         <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css?v=3">
+    <link rel="stylesheet" href="../style.css?v=12">
 
 
 
@@ -308,23 +308,78 @@
     <div class="bg-mesh"></div>
 
     <!-- Navigation -->
-    <nav class="navbar glass-navbar">
-        <div class="container nav-container">
-            <div class="logo"><a href="../index.html" style="color:inherit; text-decoration:none;">Doman<span class="logo-accent">ID</span></a></div>
-            <div class="menu-toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+    <header class="site-header">
+        <nav class="navbar" aria-label="Main navigation">
+            <div class="container nav-container">
+
+                <a
+                    class="brand"
+                    href="../index.html"
+                    aria-label="DomanID home"
+                >
+                    <span class="brand-name">
+                        Doman<span class="brand-accent">ID</span>
+                    </span>
+
+                    <span class="brand-tagline">
+                        Premium Domains
+                    </span>
+                </a>
+
+                <button
+                    class="menu-toggle"
+                    id="mobile-menu"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="main-navigation"
+                >
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+
+                <ul
+                    class="nav-links"
+                    id="main-navigation"
+                >
+                    <li>
+                        <a href="../domains/">
+                            Domains
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="index.html">
+                            Blog
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../about.html">
+                            About
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../contact.html">
+                            Contact
+                        </a>
+                    </li>
+
+                    <li class="nav-cta-item">
+                        <a
+                            class="nav-cta"
+                            href="../index.html#premium"
+                        >
+                            Premium Picks
+                        </a>
+                    </li>
+                </ul>
+
             </div>
-            <ul class="nav-links">
-                <li><a href="../index.html#premium">Premium Domains</a></li>
-                <li><a href="../index.html#all">All Domains</a></li>
-                <li><a href="../about.html">About</a></li>
-                <li><a href="index.html" style="color:var(--primary-500)">Blog</a></li>
-                <li><a href="../contact.html">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <main class="container">
         <article class="glass-panel article-container">
@@ -495,19 +550,84 @@
             <div class="cta-box">
                 <h3>Looking for a premium domain?</h3>
                 <p>Browse our curated portfolio of elite digital assets.</p>
-                <a href="../index.html#all" class="btn-glow">View Available Domains</a>
+                <a href="../domains/" class="btn-glow">View Available Domains</a>
             </div>
         </article>
     </main>
 
     <footer class="footer">
-        <div class="container">
-            <div class="logo">Doman<span class="logo-accent">ID</span></div>
-            <p>&copy; 2026 DomanID Portfolio. All rights reserved.</p>
-            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 20px;">
-                <a href="../terms.html" style="color: var(--text-muted); text-decoration: none;">Terms of Service</a>
-                <a href="../privacy.html" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a>
+        <div class="container footer-layout">
+
+            <div class="footer-brand">
+                <a
+                    class="footer-logo"
+                    href="../index.html"
+                    aria-label="DomanID home"
+                >
+                    Doman<span>ID</span>
+                </a>
+
+                <p>
+                    A curated portfolio of business-ready
+                    .com domain names.
+                </p>
             </div>
+
+            <nav
+                class="footer-nav"
+                aria-label="Footer navigation"
+            >
+                <div class="footer-column">
+                    <h2>Portfolio</h2>
+
+                    <a href="../index.html#premium">
+                        Premium Domains
+                    </a>
+
+                    <a href="../domains/">
+                        All Domains
+                    </a>
+                </div>
+
+                <div class="footer-column">
+                    <h2>Explore</h2>
+
+                    <a href="index.html">
+                        Blog
+                    </a>
+
+                    <a href="../about.html">
+                        About
+                    </a>
+
+                    <a href="../contact.html">
+                        Contact
+                    </a>
+                </div>
+
+                <div class="footer-column">
+                    <h2>Legal</h2>
+
+                    <a href="../terms.html">
+                        Terms of Service
+                    </a>
+
+                    <a href="../privacy.html">
+                        Privacy Policy
+                    </a>
+                </div>
+            </nav>
+
+        </div>
+
+        <div class="container footer-bottom">
+            <p>
+                &copy; 2026 DomanID. All rights reserved.
+            </p>
+
+            <p>
+                Premium .com Domain Portfolio
+            </p>
         </div>
     </footer>
     <script src="../app.js"></script>`n</body>

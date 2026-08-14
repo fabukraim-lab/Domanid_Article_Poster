@@ -123,59 +123,50 @@ def render_domain_card(
             '</span>'
         )
 
+    card_class = (
+        "domain-card glass-panel premium-card"
+        if featured
+        else "domain-card glass-panel"
+    )
+
+    domain_type = (
+        "premium"
+        if featured
+        else "standard"
+    )
+
+    category = (
+        "Premium Domain"
+        if featured
+        else "Domain"
+    )
+
     return f"""
                 <article
-                    class="domain-card glass-panel{' premium-card' if featured else ''}"
+                    class="{card_class}"
                     itemscope
                     itemtype="https://schema.org/Product"
                     data-domain="{esc(title.lower())}"
                     data-description="{esc(description.lower())}"
                     data-featured="{'true' if featured else 'false'}"
                 >
-                    <div
-                        class="domain-header"
-                        style="
-                            flex-direction: column;
-                            align-items: flex-start;
-                            gap: 10px;
-                        "
-                    >
-                        <div
-                            style="
-                                display: flex;
-                                justify-content: space-between;
-                                width: 100%;
-                                align-items: center;
-                                gap: 15px;
-                            "
+                    <div class="domain-card-top">
+                        <h3
+                            class="domain-name"
+                            itemprop="name"
                         >
-                            <h3
-                                class="domain-name"
-                                style="
-                                    font-size: 1.6rem;
-                                    word-break: break-all;
-                                "
-                                itemprop="name"
-                            >
-                                <a
-                                    href="{esc(internal_url)}"
-                                    style="
-                                        color: inherit;
-                                        text-decoration: none;
-                                    "
-                                >
-                                    {esc(title)}
-                                </a>
-                            </h3>
+                            <a href="{esc(internal_url)}">
+                                {esc(title)}
+                            </a>
+                        </h3>
 
-                            {premium_badge}
-                        </div>
-
-                        <meta
-                            itemprop="category"
-                            content="{'Premium Domain' if featured else 'Domain'}"
-                        >
+                        {premium_badge}
                     </div>
+
+                    <meta
+                        itemprop="category"
+                        content="{category}"
+                    >
 
                     <p
                         class="domain-card-description"
@@ -184,15 +175,12 @@ def render_domain_card(
                         {esc(description)}
                     </p>
 
-
-
                     <a
                         href="{esc(internal_url)}"
-                        class="btn-glow"
-                        style="width: 100%;"
+                        class="btn-glow domain-card-cta"
                         itemprop="url"
                         data-domain-click="{esc(title)}"
-                        data-domain-type="{'premium' if featured else 'standard'}"
+                        data-domain-type="{domain_type}"
                     >
                         View Domain
                     </a>
@@ -203,6 +191,7 @@ def render_domain_card(
                     >
                 </article>
 """.rstrip()
+
 
 
 def render_cards(
@@ -338,26 +327,23 @@ def generate_homepage() -> tuple[int, int]:
         featured=True,
     )
 
-    all_html = render_cards(
-        all_domains,
-        featured=False,
-    )
-
     source = replace_element_contents(
         source,
         "premiumGrid",
         premium_html,
     )
 
-    source = replace_element_contents(
-        source,
-        "allGrid",
-        all_html,
-    )
-
     source = remove_premium_loader(
         source
     )
+
+    # Normalize generated HTML formatting.
+    # Remove trailing whitespace while preserving
+    # exactly one final newline.
+    source = "\n".join(
+        line.rstrip()
+        for line in source.splitlines()
+    ) + "\n"
 
     temporary_file = INDEX_FILE.with_suffix(
         ".html.tmp"

@@ -409,7 +409,7 @@ def check_article_blocks(
             )
 
         for slug in re.findall(
-            r'\.\./domains/([^/]+)/',
+            r'href=["\']\.\./domains/([^/"\']+)/["\']',
             html,
             flags=re.I,
         ):
@@ -442,24 +442,31 @@ def check_article_blocks(
 
 def check_homepage(
     domains: list[dict],
-) -> None:
+) -> int:
+    """
+    Homepage is intentionally Premium-only.
+
+    Only featured domains should appear as domain cards.
+    The complete active inventory lives under /domains/.
+    """
 
     if not INDEX_FILE.exists():
-        return
+        return 0
 
     html = read_text(
         INDEX_FILE
     )
 
-    expected_cards = (
-        len(domains)
-        + sum(
-            1
-            for d in domains
-            if bool(
-                d.get("featured")
-            )
+    featured_domains = [
+        domain
+        for domain in domains
+        if bool(
+            domain.get("featured")
         )
+    ]
+
+    expected_cards = len(
+        featured_domains
     )
 
     found_cards = html.count(
@@ -468,9 +475,99 @@ def check_homepage(
 
     if found_cards != expected_cards:
         fail(
-            "Homepage card count mismatch: "
+            "Homepage premium card count mismatch: "
             f"expected {expected_cards}, "
             f"found {found_cards}"
+        )
+
+    for domain in featured_domains:
+        slug = str(
+            domain.get("slug", "")
+        ).strip()
+
+        if not slug:
+            continue
+
+        if (
+            f'href="domains/{slug}/"'
+            not in html
+        ):
+            fail(
+                "Homepage missing featured domain link: "
+                f"{slug}"
+            )
+
+    if 'href="domains/"' not in html:
+        fail(
+            "Homepage missing full domains "
+            "inventory link."
+        )
+
+    return found_cards
+
+
+def check_domains_inventory(
+    domains: list[dict],
+) -> int:
+    """
+    Validate the complete public domain inventory page.
+    """
+
+    inventory_file = (
+        PROJECT_ROOT
+        / "domains"
+        / "index.html"
+    )
+
+    if not inventory_file.exists():
+        fail(
+            "Full domains inventory page is missing: "
+            "domains/index.html"
+        )
+        return 0
+
+    html = read_text(
+        inventory_file
+    )
+
+    expected_cards = len(
+        domains
+    )
+
+    found_cards = len(
+        re.findall(
+            r'class=["\']inventory-card'
+            r'(?:\s+inventory-card-premium)?["\']',
+            html,
+            flags=re.I,
+        )
+    )
+
+    if found_cards != expected_cards:
+        fail(
+            "Domain inventory card count mismatch: "
+            f"expected {expected_cards}, "
+            f"found {found_cards}"
+        )
+
+    expected_premium = sum(
+        1
+        for domain in domains
+        if bool(
+            domain.get("featured")
+        )
+    )
+
+    found_premium = html.count(
+        'class="inventory-card '
+        'inventory-card-premium"'
+    )
+
+    if found_premium != expected_premium:
+        fail(
+            "Domain inventory premium count mismatch: "
+            f"expected {expected_premium}, "
+            f"found {found_premium}"
         )
 
     for domain in domains:
@@ -478,14 +575,49 @@ def check_homepage(
             domain.get("slug", "")
         ).strip()
 
+        if not slug:
+            continue
+
         if (
-            f'href="domains/{slug}/"'
+            f'href="{slug}/"'
             not in html
         ):
             fail(
-                f"Homepage missing domain link: "
+                "Domain inventory missing domain link: "
                 f"{slug}"
             )
+
+    placeholders = re.findall(
+        r"\{\{\s*[A-Z0-9_]+\s*\}\}",
+        html,
+        flags=re.I,
+    )
+
+    if placeholders:
+        fail(
+            "Template placeholder remains in "
+            "domains/index.html: "
+            + ", ".join(
+                sorted(
+                    set(placeholders)
+                )
+            )
+        )
+
+    canonical = (
+        f'{SITE_URL}/domains/'
+    )
+
+    if (
+        f'href="{canonical}"'
+        not in html
+    ):
+        fail(
+            "Wrong or missing canonical in "
+            "domains/index.html"
+        )
+
+    return found_cards
 
 
 def check_sitemap(
@@ -559,6 +691,11 @@ def check_local_links() -> int:
             PROJECT_ROOT
             / "templates"
             / "index_template.html"
+        ).resolve(),
+        (
+            PROJECT_ROOT
+            / "templates"
+            / "domains_index_template.html"
         ).resolve(),
     }
 
@@ -648,6 +785,8 @@ def check_local_links() -> int:
 
 def print_report(
     domains: list[dict],
+    homepage_card_count: int,
+    inventory_card_count: int,
     article_count: int,
     managed_count: int,
     links_checked: int,
@@ -662,6 +801,16 @@ def print_report(
     print(
         f"Active domains         : "
         f"{len(domains)}"
+    )
+
+    print(
+        f"Homepage premium cards : "
+        f"{homepage_card_count}"
+    )
+
+    print(
+        f"Inventory cards        : "
+        f"{inventory_card_count}"
     )
 
     print(
@@ -735,8 +884,16 @@ def main() -> int:
         active_slugs,
     )
 
-    check_homepage(
-        domains
+    homepage_card_count = (
+        check_homepage(
+            domains
+        )
+    )
+
+    inventory_card_count = (
+        check_domains_inventory(
+            domains
+        )
     )
 
     article_count, managed_count = (
@@ -755,6 +912,8 @@ def main() -> int:
 
     print_report(
         domains,
+        homepage_card_count,
+        inventory_card_count,
         article_count,
         managed_count,
         links_checked,
