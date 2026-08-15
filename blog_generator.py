@@ -58,23 +58,69 @@ def to_iso_date(date_str):
         return date_str
 
 def related_articles_html(current_slug, all_articles, max_count=3):
-    others = [a for a in all_articles if a["slug"] != current_slug]
+    others = [
+        a
+        for a in all_articles
+        if a["slug"] != current_slug
+    ]
+
     selected = others[:max_count]
+
     if not selected:
         return ""
-    cards = ""
+
+    items = ""
+
     for art in selected:
-        cards += f"""
-            <a href="{art['slug']}.html" class="glass-panel related-card" style="text-decoration:none; display:block;">
-                <span class="article-meta">{art['category']}</span>
-                <h4>{art['title']}</h4>
-            </a>"""
-    return f"""
-        <div class="related-articles">
-            <h3>Continue Reading</h3>
-            <div class="related-grid">{cards}
-            </div>
-        </div>"""
+
+        title = art.get("title", "").strip()
+        slug = art.get("slug", "").strip()
+        category = art.get("category", "").strip()
+        date = art.get("date", "").strip()
+        excerpt = art.get("excerpt", "").strip()
+
+        items += f"""
+                    <article class="related-article-item">
+
+                        <div class="related-article-meta">
+                            <span class="related-article-category">
+                                {category}
+                            </span>
+
+                            <span
+                                class="related-article-separator"
+                                aria-hidden="true"
+                            >
+                                &bull;
+                            </span>
+
+                            <time class="related-article-date">
+                                {date}
+                            </time>
+                        </div>
+
+                        <h4 class="related-article-title">
+                            <a href="{slug}.html">
+                                {title}
+                            </a>
+                        </h4>
+
+                        <p class="related-article-excerpt">
+                            {excerpt}
+                        </p>
+
+                        <a
+                            class="related-article-link"
+                            href="{slug}.html"
+                            aria-label="Read {title}"
+                        >
+                            Read article
+                            <span aria-hidden="true">&rarr;</span>
+                        </a>
+
+                    </article>"""
+
+    return items
 
 def generate_article(row, template, all_articles=None):
     # Mapping: Title, Slug, Category, Date, Author, Excerpt, FullContent, Keywords, Image, Status
@@ -179,11 +225,28 @@ def update_index(articles=None):
 
         grid_parts.append(
             f"""
-        <article class="glass-panel">
-            <div class="article-content">
-                <span class="article-meta">{category} | {date}</span>
-                <h2 class="article-title"><a href="{filename}">{title}</a></h2>
-                <p class="article-excerpt">{excerpt}</p>
+        <article class="blog-list-item">
+            <div class="blog-list-content">
+                <div class="blog-list-meta">
+                    <span class="blog-category">{category}</span>
+                    <span class="blog-meta-separator">&bull;</span>
+                    <time class="blog-date">{date}</time>
+                </div>
+
+                <h2 class="blog-list-title">
+                    <a href="{filename}">{title}</a>
+                </h2>
+
+                <p class="blog-list-excerpt">{excerpt}</p>
+
+                <a
+                    class="blog-read-link"
+                    href="{filename}"
+                    aria-label="Read {title}"
+                >
+                    Read article
+                    <span aria-hidden="true">&rarr;</span>
+                </a>
             </div>
         </article>"""
         )

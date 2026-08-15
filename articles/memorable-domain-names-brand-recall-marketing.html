@@ -5,12 +5,12 @@
     <meta name="google-site-verification" content="t2WIFPydoP4ktZH7QapjKr8Qpv1R7_UpP77-7zlIYpo">
     <link rel="canonical" href="https://domanid.com/articles/memorable-domain-names-brand-recall-marketing.html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- SEO Meta Tags -->
     <title>Memorable Domain Names: Boost Your Brand Recall & Marketing - DomanID</title>
     <meta name="description" content="Discover how memorable domain names are crucial for boosting brand recall, improving marketing effectiveness, and standing out online.">
     <meta name="keywords" content="memorable domain names, brand recall strategies, marketing domain impact, easy to remember domains, domain name psychology, cognitive fluency, buy memorable domains, online marketing asset">
-    
+
     <!-- Open Graph / Social Media -->
     <meta property="og:title" content="Memorable Domain Names: Boost Your Brand Recall & Marketing">
     <meta property="og:description" content="Discover how memorable domain names are crucial for boosting brand recall, improving marketing effectiveness, and standing out online.">
@@ -177,40 +177,143 @@
             font-size: 0.95rem;
             line-height: 1.5;
         }
+        /* Editorial Related Articles */
+
         .related-articles {
-            margin: 40px 0;
+            margin: 64px 0 54px;
+            padding-top: 38px;
+            border-top: 1px solid var(--border-light);
         }
-        .related-articles h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--text-heading);
-            margin-bottom: 20px;
-            text-align: center;
+
+        .related-articles-header {
+            margin-bottom: 8px;
         }
-        .related-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .related-card {
-            padding: 24px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-radius: 16px;
-        }
-        .related-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-        .related-card h4 {
-            color: var(--text-heading);
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            margin-top: 8px;
+
+        .related-articles-eyebrow {
+            display: block;
+            margin-bottom: 8px;
+
+            color: var(--primary-500);
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 0.74rem;
+            font-weight: 700;
             line-height: 1.4;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
-        .related-card .article-meta {
-            font-size: 0.85rem;
+
+        .related-articles h2 {
+            margin: 0;
+
+            color: var(--text-heading);
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 1.65rem;
+            font-weight: 750;
+            line-height: 1.25;
+            letter-spacing: -0.025em;
         }
+
+        .related-articles-list {
+            display: block;
+        }
+
+        .related-article-item {
+            padding: 27px 0 29px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .related-article-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            margin-bottom: 9px;
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 0.72rem;
+            font-weight: 650;
+            line-height: 1.4;
+            letter-spacing: 0.045em;
+            text-transform: uppercase;
+        }
+
+        .related-article-category {
+            color: var(--primary-500);
+        }
+
+        .related-article-separator {
+            color: var(--text-muted);
+        }
+
+        .related-article-date {
+            color: var(--text-muted);
+        }
+
+        .related-article-title {
+            max-width: 720px;
+
+            margin: 0 0 9px;
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 1.18rem;
+            font-weight: 750;
+            line-height: 1.38;
+            letter-spacing: -0.018em;
+        }
+
+        .related-article-title a {
+            color: var(--text-heading);
+            text-decoration: none;
+            transition: color 160ms ease;
+        }
+
+        .related-article-title a:hover {
+            color: var(--primary-500);
+        }
+
+        .related-article-excerpt {
+            max-width: 700px;
+
+            margin: 0 0 12px;
+
+            color: var(--text-secondary);
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.68;
+
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .related-article-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            color: var(--primary-500);
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            line-height: 1.4;
+
+            text-decoration: none;
+        }
+
+        .related-article-link span {
+            transition: transform 160ms ease;
+        }
+
+        .related-article-link:hover span {
+            transform: translateX(4px);
+        }
+
 
         @media (max-width: 768px) {
             .article-container {
@@ -242,9 +345,6 @@
             .share-btn {
                 padding: 10px 16px;
                 font-size: 0.85rem;
-            }
-            .related-grid {
-                grid-template-columns: 1fr;
             }
             .related-card {
                 padding: 16px;
@@ -329,7 +429,94 @@
         padding: 16px;
     }
 }
-    </style>
+
+
+        /* ARTICLE RESPONSIVE V2 */
+
+        @media (max-width: 1024px) {
+
+            .article-container {
+                max-width: 820px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .related-article-title,
+            .related-article-excerpt {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .related-articles {
+                margin-top: 48px;
+                padding-top: 30px;
+            }
+
+            .related-articles h2 {
+                font-size: 1.42rem;
+            }
+
+            .related-article-item {
+                padding: 23px 0 25px;
+            }
+
+            .related-article-title {
+                font-size: 1.08rem;
+                line-height: 1.4;
+            }
+
+            .related-article-excerpt {
+                font-size: 0.87rem;
+                line-height: 1.65;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .article-container {
+                width: auto;
+                max-width: none;
+                margin-left: 10px !important;
+                margin-right: 10px !important;
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+            }
+
+            .related-articles {
+                margin-top: 42px;
+                margin-bottom: 42px;
+                padding-top: 26px;
+            }
+
+            .related-articles-eyebrow {
+                font-size: 0.68rem;
+            }
+
+            .related-articles h2 {
+                font-size: 1.3rem;
+            }
+
+            .related-article-meta {
+                gap: 6px;
+                font-size: 0.66rem;
+            }
+
+            .related-article-title {
+                font-size: 1rem;
+            }
+
+            .related-article-excerpt {
+                font-size: 0.84rem;
+            }
+
+            .related-article-link {
+                font-size: 0.78rem;
+            }
+        }
+
+</style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3988572626513727" crossorigin="anonymous"></script>
 
@@ -381,11 +568,13 @@
                     class="nav-links"
                     id="main-navigation"
                 >
+                    <li><a href="../index.html">Home</a></li>
                     <li>
                         <a href="../domains/">
                             Domains
                         </a>
                     </li>
+                    <li><a href="../index.html">Tools</a></li>
 
                     <li>
                         <a href="index.html">
@@ -441,7 +630,7 @@
             </div>
 
             <div class="article-body">
-                <h1>Memorable Domain Names: Boost Your Brand Recall & Marketing</h1><p>In the digital realm, your domain name is often the very first point of contact with your audience. It's the address that leads them to your brand, your products, and your services. But it's more than just an address; it's a vital component of your marketing strategy. Specifically, <strong>memorable domain names</strong> are indispensable for boosting brand recall, driving repeat traffic, and ensuring your marketing efforts resonate long after a customer sees your ad. For entrepreneurs and small business owners, choosing a domain that sticks in the mind can be the difference between fleeting interest and lasting customer loyalty.</p><p>A forgettable domain name forces your marketing to work harder, and often less effectively. This article will delve into why memorability matters and how you can select a domain that truly enhances your brand's impact.</p><h2>The Psychology of Memorable Domain Names</h2><p>The human brain is wired to remember certain types of information more easily than others. When it comes to <strong>memorable domain names</strong>, psychology plays a significant role. Names that are easy to process, pronounce, and visualize are more likely to be recalled accurately and effortlessly, creating a smoother path to your website.</p><p>This ease of recall, known as cognitive fluency, directly impacts how positively people perceive your brand. If a domain is difficult to remember or spell, it creates friction, leading to frustration and potentially lost customers. Understanding these psychological principles is key to making an impactful choice.</p><h3>Short, Simple, and Catchy</h3><p>The golden rule for memorability often boils down to brevity and simplicity. Shorter domain names are inherently easier to remember because there's less information for the brain to process. Simple words, especially those already familiar to your audience, also contribute to higher recall rates. Think of popular brands – many have short, punchy domain names that are effortless to type and speak.</p><p>Catchy names often use alliteration, rhythm, or a unique twist that makes them stand out. While creativity is encouraged, never sacrifice clarity for cleverness if it compromises how easily someone can remember and share your name.</p><h3>Pronunciation and Spelling</h3><p>A domain name that is easy to pronounce is also typically easy to spell. If people can confidently say your domain name aloud, they're much more likely to remember it and type it correctly. Avoid complex spellings, silent letters, hyphens, or numbers that can confuse users and lead to typos.</p><p>Consider how your domain sounds when spoken over the phone or in a radio ad. If there's any ambiguity, it's a red flag. The goal is seamless communication, where your domain name flows naturally and leaves no room for error when someone tries to find you online.</p><h2>Boosting Brand Recall with Your Domain</h2><p>Your domain name is an active participant in your marketing ecosystem. When chosen strategically, <strong>memorable domain names</strong> become a powerful tool for brand recall, enhancing every marketing touchpoint.</p><ul><li><strong>Word-of-Mouth Marketing:</strong> An easy-to-remember domain is more likely to be shared verbally, acting as a natural viral marketing tool.</li><li><strong>Offline-to-Online Transition:</strong> If your domain is on a business card, billboard, or radio ad, its memorability directly impacts how many people successfully find your site.</li><li><strong>Reduced Marketing Spend:</strong> A highly memorable domain can reduce the need for constant brand reinforcement, making your marketing budget more efficient over time.</li><li><strong>Stronger Brand Identity:</strong> A clear, concise, and memorable domain strengthens your overall brand identity, making it feel more professional and established.</li><li><strong>Direct Traffic:</strong> Users who remember your domain are more likely to type it directly into their browser, reducing reliance on search engines or social media platforms.</li><li><strong>Competitive Advantage:</strong> In a crowded market, a standout domain makes your brand more prominent and easier to distinguish from rivals.</li></ul><p>Ultimately, a memorable domain amplifies all your marketing efforts, ensuring that every impression you make has a lasting impact on your audience.</p><h2>Strategies for Finding Memorable Domain Names</h2><p>Finding the perfect memorable domain name requires a blend of creativity, research, and strategic thinking. Here are some actionable strategies:</p><ol><li><strong>Keep it Short and Sweet:</strong> Aim for 6-14 characters if possible. Shorter names are easier to type and recall.</li><li><strong>Use Simple Language:</strong> Stick to common words that are easy to understand and pronounce. Avoid jargon or complex terms.</li><li><strong>Be Unique, But Relevant:</strong> Your domain should stand out but also clearly relate to your business or industry. Avoid overly abstract names that require explanation.</li><li><strong>Check for Availability:</strong> Use our <a href="../domains/" target="_blank">domain search tool</a> to explore options quickly. Don't get too attached to a name until you confirm its availability.</li><li><strong>Consider Keywords (Sparingly):</strong> A relevant keyword can aid memorability if it's naturally integrated and doesn't make the domain too long or clunky.</li><li><strong>Test It Out:</strong> Say the name aloud. Ask friends or colleagues to remember it after a few hours. Does it roll off the tongue? Is it easy to spell when heard?</li><li><strong>Explore Premium Domains:</strong> If your ideal name is taken, consider browsing our <a href="../index.html#premium" target="_blank">premium domain marketplace</a>. Investing in a high-quality, memorable domain can yield significant long-term returns.</li></ol><p>The effort you put into choosing a memorable domain name today will pay dividends in boosted brand recall and marketing effectiveness for years to come.</p><h2>Conclusion: Your Brand Deserves Memorable Domain Names</h2><p>In the digital age, your domain name is far more than a technical detail; it’s a foundational marketing asset. Investing in <strong>memorable domain names</strong> ensures your brand is easily found, recalled, and recommended, amplifying every marketing initiative you undertake. It's about reducing friction for your customers and making it effortless for them to connect with your business.</p><p>Don't let your brand get lost in the noise. Make a strategic choice that enhances your brand recall and marketing impact. Take the first step towards a stronger online presence. Browse premium domains and secure your memorable digital identity today!</p>
+                <h1>Memorable Domain Names: Boost Your Brand Recall & Marketing</h1><p>In the digital realm, your domain name is often the very first point of contact with your audience. It's the address that leads them to your brand, your products, and your services. But it's more than just an address; it's a vital component of your marketing strategy. Specifically, <strong>memorable domain names</strong> are indispensable for boosting brand recall, driving repeat traffic, and ensuring your marketing efforts resonate long after a customer sees your ad. For entrepreneurs and small business owners, choosing a domain that sticks in the mind can be the difference between fleeting interest and lasting customer loyalty.</p><p>A forgettable domain name forces your marketing to work harder, and often less effectively. This article will delve into why memorability matters and how you can select a domain that truly enhances your brand's impact.</p><h2>The Psychology of Memorable Domain Names</h2><p>The human brain is wired to remember certain types of information more easily than others. When it comes to <strong>memorable domain names</strong>, psychology plays a significant role. Names that are easy to process, pronounce, and visualize are more likely to be recalled accurately and effortlessly, creating a smoother path to your website.</p><p>This ease of recall, known as cognitive fluency, directly impacts how positively people perceive your brand. If a domain is difficult to remember or spell, it creates friction, leading to frustration and potentially lost customers. Understanding these psychological principles is key to making an impactful choice.</p><h3>Short, Simple, and Catchy</h3><p>The golden rule for memorability often boils down to brevity and simplicity. Shorter domain names are inherently easier to remember because there's less information for the brain to process. Simple words, especially those already familiar to your audience, also contribute to higher recall rates. Think of popular brands – many have short, punchy domain names that are effortless to type and speak.</p><p>Catchy names often use alliteration, rhythm, or a unique twist that makes them stand out. While creativity is encouraged, never sacrifice clarity for cleverness if it compromises how easily someone can remember and share your name.</p><h3>Pronunciation and Spelling</h3><p>A domain name that is easy to pronounce is also typically easy to spell. If people can confidently say your domain name aloud, they're much more likely to remember it and type it correctly. Avoid complex spellings, silent letters, hyphens, or numbers that can confuse users and lead to typos.</p><p>Consider how your domain sounds when spoken over the phone or in a radio ad. If there's any ambiguity, it's a red flag. The goal is seamless communication, where your domain name flows naturally and leaves no room for error when someone tries to find you online.</p><h2>Boosting Brand Recall with Your Domain</h2><p>Your domain name is an active participant in your marketing ecosystem. When chosen strategically, <strong>memorable domain names</strong> become a powerful tool for brand recall, enhancing every marketing touchpoint.</p><ul><li><strong>Word-of-Mouth Marketing:</strong> An easy-to-remember domain is more likely to be shared verbally, acting as a natural viral marketing tool.</li><li><strong>Offline-to-Online Transition:</strong> If your domain is on a business card, billboard, or radio ad, its memorability directly impacts how many people successfully find your site.</li><li><strong>Reduced Marketing Spend:</strong> A highly memorable domain can reduce the need for constant brand reinforcement, making your marketing budget more efficient over time.</li><li><strong>Stronger Brand Identity:</strong> A clear, concise, and memorable domain strengthens your overall brand identity, making it feel more professional and established.</li><li><strong>Direct Traffic:</strong> Users who remember your domain are more likely to type it directly into their browser, reducing reliance on search engines or social media platforms.</li><li><strong>Competitive Advantage:</strong> In a crowded market, a standout domain makes your brand more prominent and easier to distinguish from rivals.</li></ul><p>Ultimately, a memorable domain amplifies all your marketing efforts, ensuring that every impression you make has a lasting impact on your audience.</p><h2>Strategies for Finding Memorable Domain Names</h2><p>Finding the perfect memorable domain name requires a blend of creativity, research, and strategic thinking. Here are some actionable strategies:</p><ol><li><strong>Keep it Short and Sweet:</strong> Aim for 6-14 characters if possible. Shorter names are easier to type and recall.</li><li><strong>Use Simple Language:</strong> Stick to common words that are easy to understand and pronounce. Avoid jargon or complex terms.</li><li><strong>Be Unique, But Relevant:</strong> Your domain should stand out but also clearly relate to your business or industry. Avoid overly abstract names that require explanation.</li><li><strong>Check for Availability:</strong> Use our <a href="/domains/" target="_blank">domain search tool</a> to explore options quickly. Don't get too attached to a name until you confirm its availability.</li><li><strong>Consider Keywords (Sparingly):</strong> A relevant keyword can aid memorability if it's naturally integrated and doesn't make the domain too long or clunky.</li><li><strong>Test It Out:</strong> Say the name aloud. Ask friends or colleagues to remember it after a few hours. Does it roll off the tongue? Is it easy to spell when heard?</li><li><strong>Explore Premium Domains:</strong> If your ideal name is taken, consider browsing our <a href="/domains/" target="_blank">premium domain marketplace</a>. Investing in a high-quality, memorable domain can yield significant long-term returns.</li></ol><p>The effort you put into choosing a memorable domain name today will pay dividends in boosted brand recall and marketing effectiveness for years to come.</p><h2>Conclusion: Your Brand Deserves Memorable Domain Names</h2><p>In the digital age, your domain name is far more than a technical detail; it’s a foundational marketing asset. Investing in <strong>memorable domain names</strong> ensures your brand is easily found, recalled, and recommended, amplifying every marketing initiative you undertake. It's about reducing friction for your customers and making it effortless for them to connect with your business.</p><p>Don't let your brand get lost in the noise. Make a strategic choice that enhances your brand recall and marketing impact. Take the first step towards a stronger online presence. Browse premium domains and secure your memorable digital identity today!</p>
             </div>
 
             <!-- Social Sharing -->
@@ -474,30 +663,148 @@
             </div>
 
             <!-- Related Articles -->
-            <div class="related-articles">
-                <h3>Continue Reading</h3>
-                <div class="related-grid">
-                    
-        <div class="related-articles">
-            <h3>Continue Reading</h3>
-            <div class="related-grid">
-            <a href="niche-domain-extensions-unique-brand-online.html" class="glass-panel related-card" style="text-decoration:none; display:block;">
-                <span class="article-meta">Branding & Identity</span>
-                <h4>Niche Domain Extensions: Crafting a Unique Brand Online Today</h4>
-            </a>
-            <a href="strategic-domain-ownership-future-proof-business.html" class="glass-panel related-card" style="text-decoration:none; display:block;">
-                <span class="article-meta">Online Business</span>
-                <h4>Strategic Domain Ownership: Future-Proof Your Business Identity</h4>
-            </a>
-            <a href="evaluate-domain-worth-digital-real-estate-value.html" class="glass-panel related-card" style="text-decoration:none; display:block;">
-                <span class="article-meta">Domain Investing</span>
-                <h4>Evaluate Domain Worth: Understand the True Value of Digital Real Estate</h4>
-            </a>
-            </div>
-        </div>
+            <section
+                class="related-articles"
+                aria-labelledby="related-articles-heading"
+            >
+                <div class="related-articles-header">
+                    <span class="related-articles-eyebrow">
+                        DomanID Journal
+                    </span>
+
+                    <h2 id="related-articles-heading">
+                        Continue Reading
+                    </h2>
                 </div>
-            </div>
-<!-- DOMANID_RELATED_DOMAINS_START -->
+
+                <div class="related-articles-list">
+
+                    <article class="related-article-item">
+
+                        <div class="related-article-meta">
+                            <span class="related-article-category">
+                                Politics
+                            </span>
+
+                            <span
+                                class="related-article-separator"
+                                aria-hidden="true"
+                            >
+                                &bull;
+                            </span>
+
+                            <time class="related-article-date">
+                                2026-06-23
+                            </time>
+                        </div>
+
+                        <h4 class="related-article-title">
+                            <a href="political-proxy-domain-names-winning-losing-elections.html">
+                                The Political Proxy: How Domain Names Are Winning (and Losing) Elections
+                            </a>
+                        </h4>
+
+                        <p class="related-article-excerpt">
+                            Explore how political campaigns, advocacy groups, and government entities use domain names to influence public opinion, mobilize voters, and shape policy outcomes.
+                        </p>
+
+                        <a
+                            class="related-article-link"
+                            href="political-proxy-domain-names-winning-losing-elections.html"
+                            aria-label="Read The Political Proxy: How Domain Names Are Winning (and Losing) Elections"
+                        >
+                            Read article
+                            <span aria-hidden="true">&rarr;</span>
+                        </a>
+
+                    </article>
+                    <article class="related-article-item">
+
+                        <div class="related-article-meta">
+                            <span class="related-article-category">
+                                Due Diligence
+                            </span>
+
+                            <span
+                                class="related-article-separator"
+                                aria-hidden="true"
+                            >
+                                &bull;
+                            </span>
+
+                            <time class="related-article-date">
+                                2026-06-22
+                            </time>
+                        </div>
+
+                        <h4 class="related-article-title">
+                            <a href="domain-forensic-spot-toxic-domain-before-buy.html">
+                                The Domain Forensic: How to Spot a 'Toxic' Domain Before You Buy
+                            </a>
+                        </h4>
+
+                        <p class="related-article-excerpt">
+                            Learn how to identify penalized, spam-associated, and legally problematic domains before acquisition, protecting your portfolio from hidden liabilities.
+                        </p>
+
+                        <a
+                            class="related-article-link"
+                            href="domain-forensic-spot-toxic-domain-before-buy.html"
+                            aria-label="Read The Domain Forensic: How to Spot a 'Toxic' Domain Before You Buy"
+                        >
+                            Read article
+                            <span aria-hidden="true">&rarr;</span>
+                        </a>
+
+                    </article>
+                    <article class="related-article-item">
+
+                        <div class="related-article-meta">
+                            <span class="related-article-category">
+                                Monetization
+                            </span>
+
+                            <span
+                                class="related-article-separator"
+                                aria-hidden="true"
+                            >
+                                &bull;
+                            </span>
+
+                            <time class="related-article-date">
+                                2026-06-21
+                            </time>
+                        </div>
+
+                        <h4 class="related-article-title">
+                            <a href="expired-traffic-loophole-buy-visitors-for-20.html">
+                                The Expired Traffic Loophole: How to Buy 50,000 Visitors for $20
+                            </a>
+                        </h4>
+
+                        <p class="related-article-excerpt">
+                            Learn how acquiring expired domains with residual traffic creates extraordinary ROI opportunities by capturing forgotten visitors at registration cost.
+                        </p>
+
+                        <a
+                            class="related-article-link"
+                            href="expired-traffic-loophole-buy-visitors-for-20.html"
+                            aria-label="Read The Expired Traffic Loophole: How to Buy 50,000 Visitors for $20"
+                        >
+                            Read article
+                            <span aria-hidden="true">&rarr;</span>
+                        </a>
+
+                    </article>
+                </div>
+            </section>
+
+
+
+            <!-- CTA -->
+
+
+            <!-- DOMANID_RELATED_DOMAINS_START -->
         <div class="related-premium-domains">
 
             <h3>
@@ -519,7 +826,7 @@
                         thebostonhouse.com
                     </span>
 
-                    
+
                 </div>
 
                 <p class="domain-desc">
@@ -527,7 +834,7 @@
                 </p>
 
                 <span class="domain-cta">
-                    View Domain &rarr;
+                    View Domain
                 </span>
             </a>
 
@@ -548,7 +855,7 @@
                 </p>
 
                 <span class="domain-cta">
-                    View Domain &rarr;
+                    View Domain
                 </span>
             </a>
 
@@ -561,7 +868,7 @@
                         rentalcarcharlotte.com
                     </span>
 
-                    
+
                 </div>
 
                 <p class="domain-desc">
@@ -569,7 +876,7 @@
                 </p>
 
                 <span class="domain-cta">
-                    View Domain &rarr;
+                    View Domain
                 </span>
             </a>
             </div>

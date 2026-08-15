@@ -343,7 +343,7 @@ def render_domain_card(
                 </p>
 
                 <span class="domain-cta">
-                    View Domain &rarr;
+                    View Domain
                 </span>
             </a>
 """.rstrip()

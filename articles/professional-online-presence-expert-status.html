@@ -5,12 +5,12 @@
     <meta name="google-site-verification" content="t2WIFPydoP4ktZH7QapjKr8Qpv1R7_UpP77-7zlIYpo">
     <link rel="canonical" href="https://domanid.com/articles/professional-online-presence-expert-status.html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- SEO Meta Tags -->
     <title>Professional Online Presence: Elevate Your Expert Status Today - DomanID</title>
     <meta name="description" content="Learn how cultivating a professional online presence with a dedicated domain name can elevate your expert status and build credibility.">
     <meta name="keywords" content="professional online presence, expert status building, individual branding, online authority, freelancer domains, consultant branding, buy expert domain, personal website credibility">
-    
+
     <!-- Open Graph / Social Media -->
     <meta property="og:title" content="Professional Online Presence: Elevate Your Expert Status Today">
     <meta property="og:description" content="Learn how cultivating a professional online presence with a dedicated domain name can elevate your expert status and build credibility.">
@@ -177,40 +177,143 @@
             font-size: 0.95rem;
             line-height: 1.5;
         }
+        /* Editorial Related Articles */
+
         .related-articles {
-            margin: 40px 0;
+            margin: 64px 0 54px;
+            padding-top: 38px;
+            border-top: 1px solid var(--border-light);
         }
-        .related-articles h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--text-heading);
-            margin-bottom: 20px;
-            text-align: center;
+
+        .related-articles-header {
+            margin-bottom: 8px;
         }
-        .related-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .related-card {
-            padding: 24px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-radius: 16px;
-        }
-        .related-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-        .related-card h4 {
-            color: var(--text-heading);
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            margin-top: 8px;
+
+        .related-articles-eyebrow {
+            display: block;
+            margin-bottom: 8px;
+
+            color: var(--primary-500);
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 0.74rem;
+            font-weight: 700;
             line-height: 1.4;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
-        .related-card .article-meta {
-            font-size: 0.85rem;
+
+        .related-articles h2 {
+            margin: 0;
+
+            color: var(--text-heading);
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 1.65rem;
+            font-weight: 750;
+            line-height: 1.25;
+            letter-spacing: -0.025em;
         }
+
+        .related-articles-list {
+            display: block;
+        }
+
+        .related-article-item {
+            padding: 27px 0 29px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .related-article-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            margin-bottom: 9px;
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 0.72rem;
+            font-weight: 650;
+            line-height: 1.4;
+            letter-spacing: 0.045em;
+            text-transform: uppercase;
+        }
+
+        .related-article-category {
+            color: var(--primary-500);
+        }
+
+        .related-article-separator {
+            color: var(--text-muted);
+        }
+
+        .related-article-date {
+            color: var(--text-muted);
+        }
+
+        .related-article-title {
+            max-width: 720px;
+
+            margin: 0 0 9px;
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 1.18rem;
+            font-weight: 750;
+            line-height: 1.38;
+            letter-spacing: -0.018em;
+        }
+
+        .related-article-title a {
+            color: var(--text-heading);
+            text-decoration: none;
+            transition: color 160ms ease;
+        }
+
+        .related-article-title a:hover {
+            color: var(--primary-500);
+        }
+
+        .related-article-excerpt {
+            max-width: 700px;
+
+            margin: 0 0 12px;
+
+            color: var(--text-secondary);
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.68;
+
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .related-article-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            color: var(--primary-500);
+
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            line-height: 1.4;
+
+            text-decoration: none;
+        }
+
+        .related-article-link span {
+            transition: transform 160ms ease;
+        }
+
+        .related-article-link:hover span {
+            transform: translateX(4px);
+        }
+
 
         @media (max-width: 768px) {
             .article-container {
@@ -242,9 +345,6 @@
             .share-btn {
                 padding: 10px 16px;
                 font-size: 0.85rem;
-            }
-            .related-grid {
-                grid-template-columns: 1fr;
             }
             .related-card {
                 padding: 16px;
@@ -329,7 +429,94 @@
         padding: 16px;
     }
 }
-    </style>
+
+
+        /* ARTICLE RESPONSIVE V2 */
+
+        @media (max-width: 1024px) {
+
+            .article-container {
+                max-width: 820px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .related-article-title,
+            .related-article-excerpt {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .related-articles {
+                margin-top: 48px;
+                padding-top: 30px;
+            }
+
+            .related-articles h2 {
+                font-size: 1.42rem;
+            }
+
+            .related-article-item {
+                padding: 23px 0 25px;
+            }
+
+            .related-article-title {
+                font-size: 1.08rem;
+                line-height: 1.4;
+            }
+
+            .related-article-excerpt {
+                font-size: 0.87rem;
+                line-height: 1.65;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .article-container {
+                width: auto;
+                max-width: none;
+                margin-left: 10px !important;
+                margin-right: 10px !important;
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+            }
+
+            .related-articles {
+                margin-top: 42px;
+                margin-bottom: 42px;
+                padding-top: 26px;
+            }
+
+            .related-articles-eyebrow {
+                font-size: 0.68rem;
+            }
+
+            .related-articles h2 {
+                font-size: 1.3rem;
+            }
+
+            .related-article-meta {
+                gap: 6px;
+                font-size: 0.66rem;
+            }
+
+            .related-article-title {
+                font-size: 1rem;
+            }
+
+            .related-article-excerpt {
+                font-size: 0.84rem;
+            }
+
+            .related-article-link {
+                font-size: 0.78rem;
+            }
+        }
+
+</style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3988572626513727" crossorigin="anonymous"></script>
 
@@ -381,11 +568,13 @@
                     class="nav-links"
                     id="main-navigation"
                 >
+                    <li><a href="../index.html">Home</a></li>
                     <li>
                         <a href="../domains/">
                             Domains
                         </a>
                     </li>
+                    <li><a href="../index.html">Tools</a></li>
 
                     <li>
                         <a href="index.html">
@@ -441,7 +630,7 @@
             </div>
 
             <div class="article-body">
-                <h1>Professional Online Presence: Elevate Your Expert Status Today</h1><p>For consultants, freelancers, thought leaders, and specialized entrepreneurs, establishing yourself as an authority in your field is paramount. In the digital age, this means cultivating a compelling <strong>professional online presence</strong>. It's not enough to simply have a social media profile; true expert status is built upon a digital foundation you own and control: your own domain name. Your personalized domain acts as your digital calling card, a dedicated hub where your expertise shines, elevating your credibility and trustworthiness in the eyes of potential clients and collaborators.</p><p>Without a focused and owned online presence, your professional identity remains fragmented and dependent on third-party platforms. This article will explore why a personal domain is indispensable for experts and how it can significantly boost your standing.</p><h2>Why a Professional Online Presence Matters</h2><p>In a world saturated with information, standing out as a true expert requires more than just knowledge. It demands visible authority, clear communication, and unwavering credibility. A strong <strong>professional online presence</strong> provides all of this, signaling to your audience that you are serious about your craft and committed to offering valuable insights.</p><p>This is your opportunity to control your narrative, curate your achievements, and demonstrate your unique value proposition without the distractions and limitations of generic platforms. It’s about building a digital asset that works for you 24/7, affirming your position as a leader in your field.</p><h3>Beyond Social Media Profiles</h3><p>While social media platforms like LinkedIn or Twitter are valuable for networking and quick updates, they are rented spaces. Your content, your audience, and even your professional image are subject to their rules, algorithms, and potential obsolescence. Relying solely on these platforms means you don't truly own your digital identity. If a platform changes its terms, or even disappears, your carefully curated presence can vanish or become inaccessible.</p><p>A dedicated domain name and website, however, provide a stable, controlled environment. It’s your digital home where you set the rules, showcase your work exactly as you intend, and directly engage with your audience without intermediaries. This ownership is crucial for long-term professional development.</p><h3>Showcasing Your Expertise</h3><p>Your domain-powered website becomes the ultimate portfolio for your expertise. It’s a place where you can publish in-depth articles, share case studies, host your resume or CV, display testimonials, and offer digital products or services. Unlike the fleeting nature of social media posts, content on your own website is evergreen and easily discoverable through search engines.</p><p>This centralized hub makes it easy for potential clients, employers, or media contacts to quickly assess your qualifications and understand the breadth of your knowledge. It allows you to present a cohesive and authoritative image, solidifying your reputation as a go-to expert in your niche.</p><h2>Building Your Expert Status with a Domain</h2><p>A strategically chosen domain name is more than an address; it’s a powerful tool for elevating your <strong>professional online presence</strong> and establishing your expert status.</p><ul><li><strong>Enhanced Credibility:</strong> A custom domain (e.g., yourname.com) instantly looks more professional and trustworthy than a generic free blog URL or a social media profile link.</li><li><strong>Increased Authority:</strong> Owning your digital space allows you to publish original content, positioning you as a thought leader and subject matter expert.</li><li><strong>Improved Discoverability:</strong> A well-optimized website on your own domain is more likely to rank high in search results when people look for your name or expertise.</li><li><strong>Personal Brand Control:</strong> You dictate the messaging, design, and content, ensuring your professional image is consistently presented as you intend.</li><li><strong>Monetization Opportunities:</strong> Your own platform offers greater flexibility for selling courses, books, consulting services, or accepting speaking engagements.</li><li><strong>Networking Advantage:</strong> A professional domain makes a strong impression in networking, providing a clear destination for new contacts to learn more about you.</li></ul><p>These benefits collectively build a robust foundation for your career, opening doors to new opportunities and solidifying your reputation as a trusted expert.</p><h2>Steps to Cultivate Your Professional Online Presence</h2><p>Ready to elevate your expert status? Here’s a clear path to building a powerful <strong>professional online presence</strong>:</p><ol><li><strong>Choose Your Signature Domain:</strong> Ideally, your full name (e.g., JaneDoe.com) or a combination of your name and expertise (e.g., JaneDoeConsulting.com). Use our <a href="../domains/" target="_blank">domain search tool</a> to find available options.</li><li><strong>Build a Professional Website:</strong> Create a clean, easy-to-navigate website that showcases your bio, portfolio, services, and contact information. Focus on demonstrating your expertise.</li><li><strong>Publish High-Quality Content:</strong> Regularly share insights, articles, case studies, or whitepapers that highlight your knowledge and perspective. This positions you as a thought leader.</li><li><strong>Integrate Social Media Strategically:</strong> Use social media to drive traffic to your owned website, rather than relying on it as your primary online presence. Share snippets and link back to your detailed content.</li><li><strong>Collect Testimonials and Endorsements:</strong> Feature client testimonials prominently on your site to build social proof and reinforce your credibility.</li><li><strong>Optimize for Search Engines:</strong> Ensure your website is optimized with relevant keywords so potential clients can easily find you when searching for expertise in your field.</li><li><strong>Continuously Update and Engage:</strong> Keep your content fresh and relevant. Respond to comments and engage with your audience to foster a thriving professional community.</li></ol><p>By taking these steps, you’ll not only establish a compelling online presence but also create a valuable asset that propels your professional growth.</p><h2>Conclusion: Your Domain, Your Expert Authority</h2><p>In the competitive landscape of professional services and thought leadership, a strong <strong>professional online presence</strong> is your most potent asset. By securing your own domain name and building a dedicated digital hub, you take control of your narrative, amplify your expertise, and build unshakeable credibility. This isn't just about being found; it's about being recognized, trusted, and sought after as a true authority in your field.</p><p>Don't let your expertise be confined to rented digital spaces. Invest in your professional identity and elevate your expert status today. Explore our <a href="../domains/" target="_blank">browse premium domains</a> and secure the digital foundation for your lifelong career asset.</p>
+                <h1>Professional Online Presence: Elevate Your Expert Status Today</h1><p>For consultants, freelancers, thought leaders, and specialized entrepreneurs, establishing yourself as an authority in your field is paramount. In the digital age, this means cultivating a compelling <strong>professional online presence</strong>. It's not enough to simply have a social media profile; true expert status is built upon a digital foundation you own and control: your own domain name. Your personalized domain acts as your digital calling card, a dedicated hub where your expertise shines, elevating your credibility and trustworthiness in the eyes of potential clients and collaborators.</p><p>Without a focused and owned online presence, your professional identity remains fragmented and dependent on third-party platforms. This article will explore why a personal domain is indispensable for experts and how it can significantly boost your standing.</p><h2>Why a Professional Online Presence Matters</h2><p>In a world saturated with information, standing out as a true expert requires more than just knowledge. It demands visible authority, clear communication, and unwavering credibility. A strong <strong>professional online presence</strong> provides all of this, signaling to your audience that you are serious about your craft and committed to offering valuable insights.</p><p>This is your opportunity to control your narrative, curate your achievements, and demonstrate your unique value proposition without the distractions and limitations of generic platforms. It’s about building a digital asset that works for you 24/7, affirming your position as a leader in your field.</p><h3>Beyond Social Media Profiles</h3><p>While social media platforms like LinkedIn or Twitter are valuable for networking and quick updates, they are rented spaces. Your content, your audience, and even your professional image are subject to their rules, algorithms, and potential obsolescence. Relying solely on these platforms means you don't truly own your digital identity. If a platform changes its terms, or even disappears, your carefully curated presence can vanish or become inaccessible.</p><p>A dedicated domain name and website, however, provide a stable, controlled environment. It’s your digital home where you set the rules, showcase your work exactly as you intend, and directly engage with your audience without intermediaries. This ownership is crucial for long-term professional development.</p><h3>Showcasing Your Expertise</h3><p>Your domain-powered website becomes the ultimate portfolio for your expertise. It’s a place where you can publish in-depth articles, share case studies, host your resume or CV, display testimonials, and offer digital products or services. Unlike the fleeting nature of social media posts, content on your own website is evergreen and easily discoverable through search engines.</p><p>This centralized hub makes it easy for potential clients, employers, or media contacts to quickly assess your qualifications and understand the breadth of your knowledge. It allows you to present a cohesive and authoritative image, solidifying your reputation as a go-to expert in your niche.</p><h2>Building Your Expert Status with a Domain</h2><p>A strategically chosen domain name is more than an address; it’s a powerful tool for elevating your <strong>professional online presence</strong> and establishing your expert status.</p><ul><li><strong>Enhanced Credibility:</strong> A custom domain (e.g., yourname.com) instantly looks more professional and trustworthy than a generic free blog URL or a social media profile link.</li><li><strong>Increased Authority:</strong> Owning your digital space allows you to publish original content, positioning you as a thought leader and subject matter expert.</li><li><strong>Improved Discoverability:</strong> A well-optimized website on your own domain is more likely to rank high in search results when people look for your name or expertise.</li><li><strong>Personal Brand Control:</strong> You dictate the messaging, design, and content, ensuring your professional image is consistently presented as you intend.</li><li><strong>Monetization Opportunities:</strong> Your own platform offers greater flexibility for selling courses, books, consulting services, or accepting speaking engagements.</li><li><strong>Networking Advantage:</strong> A professional domain makes a strong impression in networking, providing a clear destination for new contacts to learn more about you.</li></ul><p>These benefits collectively build a robust foundation for your career, opening doors to new opportunities and solidifying your reputation as a trusted expert.</p><h2>Steps to Cultivate Your Professional Online Presence</h2><p>Ready to elevate your expert status? Here’s a clear path to building a powerful <strong>professional online presence</strong>:</p><ol><li><strong>Choose Your Signature Domain:</strong> Ideally, your full name (e.g., JaneDoe.com) or a combination of your name and expertise (e.g., JaneDoeConsulting.com). Use our <a href="/domains/" target="_blank">domain search tool</a> to find available options.</li><li><strong>Build a Professional Website:</strong> Create a clean, easy-to-navigate website that showcases your bio, portfolio, services, and contact information. Focus on demonstrating your expertise.</li><li><strong>Publish High-Quality Content:</strong> Regularly share insights, articles, case studies, or whitepapers that highlight your knowledge and perspective. This positions you as a thought leader.</li><li><strong>Integrate Social Media Strategically:</strong> Use social media to drive traffic to your owned website, rather than relying on it as your primary online presence. Share snippets and link back to your detailed content.</li><li><strong>Collect Testimonials and Endorsements:</strong> Feature client testimonials prominently on your site to build social proof and reinforce your credibility.</li><li><strong>Optimize for Search Engines:</strong> Ensure your website is optimized with relevant keywords so potential clients can easily find you when searching for expertise in your field.</li><li><strong>Continuously Update and Engage:</strong> Keep your content fresh and relevant. Respond to comments and engage with your audience to foster a thriving professional community.</li></ol><p>By taking these steps, you’ll not only establish a compelling online presence but also create a valuable asset that propels your professional growth.</p><h2>Conclusion: Your Domain, Your Expert Authority</h2><p>In the competitive landscape of professional services and thought leadership, a strong <strong>professional online presence</strong> is your most potent asset. By securing your own domain name and building a dedicated digital hub, you take control of your narrative, amplify your expertise, and build unshakeable credibility. This isn't just about being found; it's about being recognized, trusted, and sought after as a true authority in your field.</p><p>Don't let your expertise be confined to rented digital spaces. Invest in your professional identity and elevate your expert status today. Explore our <a href="/domains/" target="_blank">browse premium domains</a> and secure the digital foundation for your lifelong career asset.</p>
             </div>
 
             <!-- Social Sharing -->
@@ -474,30 +663,148 @@
             </div>
 
             <!-- Related Articles -->
-            <div class="related-articles">
-                <h3>Continue Reading</h3>
-                <div class="related-grid">
-                    
-        <div class="related-articles">
-            <h3>Continue Reading</h3>
-            <div class="related-grid">
-            <a href="memorable-domain-names-brand-recall-marketing.html" class="glass-panel related-card" style="text-decoration:none; display:block;">
-                <span class="article-meta">Digital Marketing</span>
-                <h4>Memorable Domain Names: Boost Your Brand Recall & Marketing</h4>
-            </a>
-            <a href="niche-domain-extensions-unique-brand-online.html" class="glass-panel related-card" style="text-decoration:none; display:block;">
-                <span class="article-meta">Branding & Identity</span>
-                <h4>Niche Domain Extensions: Crafting a Unique Brand Online Today</h4>
-            </a>
-            <a href="strategic-domain-ownership-future-proof-business.html" class="glass-panel related-card" style="text-decoration:none; display:block;">
-                <span class="article-meta">Online Business</span>
-                <h4>Strategic Domain Ownership: Future-Proof Your Business Identity</h4>
-            </a>
-            </div>
-        </div>
+            <section
+                class="related-articles"
+                aria-labelledby="related-articles-heading"
+            >
+                <div class="related-articles-header">
+                    <span class="related-articles-eyebrow">
+                        DomanID Journal
+                    </span>
+
+                    <h2 id="related-articles-heading">
+                        Continue Reading
+                    </h2>
                 </div>
-            </div>
-<!-- DOMANID_RELATED_DOMAINS_START -->
+
+                <div class="related-articles-list">
+
+                    <article class="related-article-item">
+
+                        <div class="related-article-meta">
+                            <span class="related-article-category">
+                                Politics
+                            </span>
+
+                            <span
+                                class="related-article-separator"
+                                aria-hidden="true"
+                            >
+                                &bull;
+                            </span>
+
+                            <time class="related-article-date">
+                                2026-06-23
+                            </time>
+                        </div>
+
+                        <h4 class="related-article-title">
+                            <a href="political-proxy-domain-names-winning-losing-elections.html">
+                                The Political Proxy: How Domain Names Are Winning (and Losing) Elections
+                            </a>
+                        </h4>
+
+                        <p class="related-article-excerpt">
+                            Explore how political campaigns, advocacy groups, and government entities use domain names to influence public opinion, mobilize voters, and shape policy outcomes.
+                        </p>
+
+                        <a
+                            class="related-article-link"
+                            href="political-proxy-domain-names-winning-losing-elections.html"
+                            aria-label="Read The Political Proxy: How Domain Names Are Winning (and Losing) Elections"
+                        >
+                            Read article
+                            <span aria-hidden="true">&rarr;</span>
+                        </a>
+
+                    </article>
+                    <article class="related-article-item">
+
+                        <div class="related-article-meta">
+                            <span class="related-article-category">
+                                Due Diligence
+                            </span>
+
+                            <span
+                                class="related-article-separator"
+                                aria-hidden="true"
+                            >
+                                &bull;
+                            </span>
+
+                            <time class="related-article-date">
+                                2026-06-22
+                            </time>
+                        </div>
+
+                        <h4 class="related-article-title">
+                            <a href="domain-forensic-spot-toxic-domain-before-buy.html">
+                                The Domain Forensic: How to Spot a 'Toxic' Domain Before You Buy
+                            </a>
+                        </h4>
+
+                        <p class="related-article-excerpt">
+                            Learn how to identify penalized, spam-associated, and legally problematic domains before acquisition, protecting your portfolio from hidden liabilities.
+                        </p>
+
+                        <a
+                            class="related-article-link"
+                            href="domain-forensic-spot-toxic-domain-before-buy.html"
+                            aria-label="Read The Domain Forensic: How to Spot a 'Toxic' Domain Before You Buy"
+                        >
+                            Read article
+                            <span aria-hidden="true">&rarr;</span>
+                        </a>
+
+                    </article>
+                    <article class="related-article-item">
+
+                        <div class="related-article-meta">
+                            <span class="related-article-category">
+                                Monetization
+                            </span>
+
+                            <span
+                                class="related-article-separator"
+                                aria-hidden="true"
+                            >
+                                &bull;
+                            </span>
+
+                            <time class="related-article-date">
+                                2026-06-21
+                            </time>
+                        </div>
+
+                        <h4 class="related-article-title">
+                            <a href="expired-traffic-loophole-buy-visitors-for-20.html">
+                                The Expired Traffic Loophole: How to Buy 50,000 Visitors for $20
+                            </a>
+                        </h4>
+
+                        <p class="related-article-excerpt">
+                            Learn how acquiring expired domains with residual traffic creates extraordinary ROI opportunities by capturing forgotten visitors at registration cost.
+                        </p>
+
+                        <a
+                            class="related-article-link"
+                            href="expired-traffic-loophole-buy-visitors-for-20.html"
+                            aria-label="Read The Expired Traffic Loophole: How to Buy 50,000 Visitors for $20"
+                        >
+                            Read article
+                            <span aria-hidden="true">&rarr;</span>
+                        </a>
+
+                    </article>
+                </div>
+            </section>
+
+
+
+            <!-- CTA -->
+
+
+            <!-- DOMANID_RELATED_DOMAINS_START -->
         <div class="related-premium-domains">
 
             <h3>
@@ -519,7 +826,7 @@
                         garagefloortiling.com
                     </span>
 
-                    
+
                 </div>
 
                 <p class="domain-desc">
@@ -527,7 +834,7 @@
                 </p>
 
                 <span class="domain-cta">
-                    View Domain &rarr;
+                    View Domain
                 </span>
             </a>
 
@@ -540,7 +847,7 @@
                         singaporetravelagent.com
                     </span>
 
-                    
+
                 </div>
 
                 <p class="domain-desc">
@@ -548,7 +855,7 @@
                 </p>
 
                 <span class="domain-cta">
-                    View Domain &rarr;
+                    View Domain
                 </span>
             </a>
 
@@ -569,7 +876,7 @@
                 </p>
 
                 <span class="domain-cta">
-                    View Domain &rarr;
+                    View Domain
                 </span>
             </a>
             </div>

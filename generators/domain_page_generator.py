@@ -814,11 +814,13 @@ def render_domain_page(
 
                 <ul class="nav-links">
 
+                    <li><a href="../../index.html">Home</a></li>
                     <li>
                         <a href="../../domains/">
                             Domains
                         </a>
                     </li>
+                    <li><a href="../../index.html">Tools</a></li>
 
                     <li>
                         <a href="../../articles/index.html">
