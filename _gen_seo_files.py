@@ -93,7 +93,12 @@ if os.path.exists(domains_data_file):
     except Exception as exc:
         print(f"Warning: could not add domain pages to sitemap: {exc}")
 
-with open("sitemap.xml", "w", encoding="utf-8") as f:
+with open(
+    "sitemap.xml",
+    "w",
+    encoding="utf-8",
+    newline="\n",
+) as f:
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     f.write('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
     f.write("\n".join(urls))
@@ -140,6 +145,11 @@ rss = f"""<?xml version="1.0" encoding="UTF-8"?>
   </channel>
 </rss>"""
 
-with open("rss.xml", "w", encoding="utf-8") as f:
+with open(
+    "rss.xml",
+    "w",
+    encoding="utf-8",
+    newline="\n",
+) as f:
     f.write(rss)
 print(f"Generated rss.xml with {len(items)} articles")

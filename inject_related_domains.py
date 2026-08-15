@@ -509,6 +509,14 @@ def process_article(
         return False
 
     if not dry_run:
+        # Normalize generated HTML before writing.
+        # Prevent trailing whitespace from being reintroduced
+        # whenever related domains are injected.
+        updated = "\n".join(
+            line.rstrip()
+            for line in updated.splitlines()
+        ) + "\n"
+
         filepath.write_text(
             updated,
             encoding="utf-8",
