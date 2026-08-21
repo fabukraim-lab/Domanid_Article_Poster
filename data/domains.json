@@ -2,7 +2,7 @@
   "schema_version": 1,
   "source": "google_sheets",
   "domain_count": 30,
-  "featured_count": 5,
+  "featured_count": 10,
   "domains": [
     {
       "title": "attorneyauto.com",
@@ -11,6 +11,57 @@
       "description": "A premium domain for car accident legal services. High SEO potential with keywords \"attorney\" and \"auto\", ideal for PPC campaigns targeting clients seeking legal help. Strong branding for legal firms and easy to remember for local clients.",
       "link": "https://Attorneyauto.com",
       "featured": true,
+      "premium": true,
+      "expired": false,
+      "sold": false,
+      "status": "active"
+    },
+    {
+      "title": "bestdeodorants.com",
+      "domain": "bestdeodorants.com",
+      "slug": "bestdeodorants-com",
+      "description": "Perfect for an online deodorant store. Keyword-rich for organic search and ad campaigns. Memorable and brandable for e-commerce, attracting health-conscious and beauty-focused shoppers.",
+      "link": "https://bestdeodorants.com",
+      "featured": true,
+      "premium": true,
+      "expired": false,
+      "sold": false,
+      "status": "active"
+    },
+    {
+      "title": "bestlawyercaraccident.com",
+      "domain": "bestlawyercaraccident.com",
+      "slug": "bestlawyercaraccident-com",
+      "description": "Targeted domain for car accident legal services. Keyword-focused for search and PPC. Strong branding for law firms specializing in auto accidents, driving organic traffic and trust.",
+      "link": "https://bestlawyercaraccident.com",
+      "featured": true,
+      "premium": true,
+      "expired": false,
+      "sold": false,
+      "status": "active"
+    },
+    {
+      "title": "clinicvictoria.com",
+      "domain": "clinicvictoria.com",
+      "slug": "clinicvictoria-com",
+      "description": "Professional and brandable domain for medical or beauty clinics. Easy to remember, great for local SEO, and builds credibility. Enhances visibility for online marketing and client acquisition.",
+      "link": "https://clinicvictoria.com",
+      "featured": true,
+      "premium": true,
+      "expired": false,
+      "sold": false,
+      "status": "active"
+    },
+    {
+      "title": "companyinspector.com",
+      "domain": "companyinspector.com",
+      "slug": "companyinspector-com",
+      "description": "Keyword-rich domain for business audits or inspection services. SEO optimized, easy to brand, and ideal for PPC campaigns targeting businesses seeking compliance or inspection services.",
+      "link": "https://companyinspector.com",
+      "featured": true,
+      "premium": true,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -20,6 +71,9 @@
       "description": "Perfect domain for dental implant clinics. SEO-rich with target keywords, builds trust, memorable for patients, and supports Google Ads campaigns effectively.",
       "link": "https://dentalimplantsservice.com",
       "featured": true,
+      "premium": true,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -29,6 +83,21 @@
       "description": "Creative and brandable domain suitable for digital agencies, apps, or tech startups. Easy to remember, unique, and attractive for branding and marketing campaigns.",
       "link": "https://digitately.com",
       "featured": true,
+      "premium": true,
+      "expired": false,
+      "sold": false,
+      "status": "active"
+    },
+    {
+      "title": "flowershopboston.com",
+      "domain": "flowershopboston.com",
+      "slug": "flowershopboston-com",
+      "description": "Perfect for local flower shop in Boston. Keyword-rich for local SEO, memorable for customers, and ideal for online orders and promotions.",
+      "link": "https://flowershopboston.com",
+      "featured": true,
+      "premium": true,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -38,6 +107,9 @@
       "description": "General law advice domain. Keyword-rich, suitable for blogs or legal platforms, enhances trust, builds authority, and supports Google Ads campaigns.",
       "link": "https://lawyerslegaladvice.com",
       "featured": true,
+      "premium": true,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -47,15 +119,9 @@
       "description": "Perfect local business domain for Miami pool cleaning services. Keyword-rich, easy to remember, SEO-friendly, boosts local PPC campaigns and branding.",
       "link": "https://poolcleanermiami.com",
       "featured": true,
-      "status": "active"
-    },
-    {
-      "title": "bestdeodorants.com",
-      "domain": "bestdeodorants.com",
-      "slug": "bestdeodorants-com",
-      "description": "Perfect for an online deodorant store. Keyword-rich for organic search and ad campaigns. Memorable and brandable for e-commerce, attracting health-conscious and beauty-focused shoppers.",
-      "link": "https://bestdeodorants.com",
-      "featured": false,
+      "premium": true,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -65,15 +131,9 @@
       "description": "Excellent domain for European travel deals. SEO optimized for \"best Europe vacations\", perfect for travel blogs or agencies. Builds trust and authority in travel niche, enhancing marketing campaigns.",
       "link": "https://besteuropevacations.com",
       "featured": false,
-      "status": "active"
-    },
-    {
-      "title": "bestlawyercaraccident.com",
-      "domain": "bestlawyercaraccident.com",
-      "slug": "bestlawyercaraccident-com",
-      "description": "Targeted domain for car accident legal services. Keyword-focused for search and PPC. Strong branding for law firms specializing in auto accidents, driving organic traffic and trust.",
-      "link": "https://bestlawyercaraccident.com",
-      "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -83,6 +143,9 @@
       "description": "Ideal domain for silver coin trading. SEO-friendly for \"buy silver coins\", suitable for e-commerce. Enhances credibility for collectors and investors, and supports paid campaigns effectively.",
       "link": "https://buyslivercoins.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -92,6 +155,9 @@
       "description": "Perfect for driving instructors or school networks. SEO-optimized for driving lessons, easy to remember, and enhances trust. Suitable for local and national PPC campaigns.",
       "link": "https://cardrivinginstructors.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -101,24 +167,9 @@
       "description": "Strong brandable domain for a Chevrolet dealership. High keyword relevance, boosts SEO for car sales, and effective for paid advertising. Instantly recognizable in automotive market.",
       "link": "https://chevroletdealership.com",
       "featured": false,
-      "status": "active"
-    },
-    {
-      "title": "clinicvictoria.com",
-      "domain": "clinicvictoria.com",
-      "slug": "clinicvictoria-com",
-      "description": "Professional and brandable domain for medical or beauty clinics. Easy to remember, great for local SEO, and builds credibility. Enhances visibility for online marketing and client acquisition.",
-      "link": "https://clinicvictoria.com",
-      "featured": false,
-      "status": "active"
-    },
-    {
-      "title": "companyinspector.com",
-      "domain": "companyinspector.com",
-      "slug": "companyinspector-com",
-      "description": "Keyword-rich domain for business audits or inspection services. SEO optimized, easy to brand, and ideal for PPC campaigns targeting businesses seeking compliance or inspection services.",
-      "link": "https://companyinspector.com",
-      "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -128,15 +179,9 @@
       "description": "Ideal for a platform offering proposals or templates. Brandable, SEO-friendly, and versatile for content marketing. Attracts professionals seeking templates and enhances conversion potential.",
       "link": "https://createproposal.com",
       "featured": false,
-      "status": "active"
-    },
-    {
-      "title": "flowershopboston.com",
-      "domain": "flowershopboston.com",
-      "slug": "flowershopboston-com",
-      "description": "Perfect for local flower shop in Boston. Keyword-rich for local SEO, memorable for customers, and ideal for online orders and promotions.",
-      "link": "https://flowershopboston.com",
-      "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -146,15 +191,9 @@
       "description": "Domain for flooring or renovation business. SEO-optimized for \"garage floor tiling\", memorable and professional. Supports online marketing and contractor branding.",
       "link": "https://garagefloortiling.com",
       "featured": false,
-      "status": "active"
-    },
-    {
-      "title": "gilbertarizonahome.com",
-      "domain": "gilbertarizonahome.com",
-      "slug": "gilbertarizonahome-com",
-      "description": "Targeted real estate domain. Great for local SEO in Gilbert, AZ, memorable, and brandable for realtors. Attracts home buyers and enhances property listings visibility.",
-      "link": "https://gilbertarizonahome.com",
-      "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -164,15 +203,9 @@
       "description": "Ideal for hotel booking or travel site focused on Majorca. SEO-friendly, easy to remember, and attractive for travel campaigns and local tourism marketing.",
       "link": "https://hotelsmajorca.com",
       "featured": false,
-      "status": "active"
-    },
-    {
-      "title": "hotelsvictorville.com",
-      "domain": "hotelsvictorville.com",
-      "slug": "hotelsvictorville-com",
-      "description": "Perfect domain for Victorville hotel listings. Optimized for local search, supports PPC campaigns, and builds trust for hospitality services.",
-      "link": "https://hotelsvictorville.com",
-      "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -182,6 +215,9 @@
       "description": "Niche legal domain focused on employment and discrimination cases. High SEO value for legal queries, highly brandable, and effective for PPC campaigns targeting clients.",
       "link": "https://lawyeremploymentdiscrimination.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -191,6 +227,9 @@
       "description": "Strong domain for instant life insurance platforms. SEO and PPC optimized, memorable, builds brand credibility, and drives conversions in insurance niche.",
       "link": "https://lifeinsuranceinstantly.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -200,6 +239,9 @@
       "description": "Brandable domain for modern furniture and decor. Easy to remember, visually appealing, SEO-friendly, suitable for e-commerce or interior design platforms.",
       "link": "https://modernisedfurniture.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -209,6 +251,9 @@
       "description": "Keyword-rich domain for nursing license resources. Strong SEO for professionals seeking certification, memorable, and ideal for educational or informational campaigns.",
       "link": "https://nurseslicenses.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -218,6 +263,9 @@
       "description": "Targeted domain for Charlotte car rentals. Optimized for local search, memorable for customers, and supports travel agency marketing and PPC campaigns.",
       "link": "https://rentalcarcharlotte.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -227,6 +275,9 @@
       "description": "Brandable and elegant domain for flower or gift delivery services. Memorable, SEO-friendly, and effective for marketing campaigns targeting local customers.",
       "link": "https://rosedeliver.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -236,6 +287,9 @@
       "description": "Professional domain for Singapore travel agencies. SEO-rich, builds trust, and perfect for PPC campaigns and branding in tourism sector.",
       "link": "https://singaporetravelagent.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -245,6 +299,9 @@
       "description": "Targeted domain for Boston real estate or rental brand. Local SEO-friendly, memorable, and effective for marketing and listing promotions.",
       "link": "https://thebostonhouse.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -254,6 +311,9 @@
       "description": "Strong brandable domain for health insurance providers. SEO and PPC optimized, builds trust, memorable, and attractive for marketing campaigns.",
       "link": "https://unitehealthinsurance.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -263,6 +323,9 @@
       "description": "Local business domain for window tinting in Las Vegas. SEO-rich, easy to remember, and boosts PPC and local visibility for services.",
       "link": "https://windowtintingvegas.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
     },
     {
@@ -272,7 +335,34 @@
       "description": "E-commerce domain for women’s clothing. SEO-friendly, brandable, memorable, perfect for marketing fashion products online.",
       "link": "https://womanclothesstore.com",
       "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": false,
       "status": "active"
+    },
+    {
+      "title": "hotelsvictorville.com",
+      "domain": "hotelsvictorville.com",
+      "slug": "hotelsvictorville-com",
+      "description": "Perfect domain for Victorville hotel listings. Optimized for local search, supports PPC campaigns, and builds trust for hospitality services.",
+      "link": "https://hotelsvictorville.com",
+      "featured": false,
+      "premium": false,
+      "expired": false,
+      "sold": true,
+      "status": "sold"
+    },
+    {
+      "title": "gilbertarizonahome.com",
+      "domain": "gilbertarizonahome.com",
+      "slug": "gilbertarizonahome-com",
+      "description": "Targeted real estate domain. Great for local SEO in Gilbert, AZ, memorable, and brandable for realtors. Attracts home buyers and enhances property listings visibility.",
+      "link": "https://gilbertarizonahome.com",
+      "featured": false,
+      "premium": false,
+      "expired": true,
+      "sold": false,
+      "status": "expired"
     }
   ]
 }

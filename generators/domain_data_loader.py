@@ -3,9 +3,10 @@ DomanID - Domain Data Loader
 Phase 1A/1B: Domain Data Foundation
 
 Purpose:
-- Read the current domain inventory from published Google Sheets CSV files.
+- Read the current domain inventory from Available Domains / Sheet1.
 - Normalize all domain records into one consistent structure.
-- Detect featured domains.
+- Preserve active, sold, and expired domain records.
+- Detect premium domains.
 - Clean normal URLs and Markdown-formatted URLs.
 - Generate data/domains.json for local development and later static generation.
 
@@ -45,29 +46,23 @@ OUTPUT_FILE = DATA_DIR / "domains.json"
 
 
 # ============================================================
-# CURRENT GOOGLE SHEETS SOURCES
+# CURRENT GOOGLE SHEETS SOURCE
 # ============================================================
 
-DEFAULT_FEATURED_CSV_URL = (
-    "https://docs.google.com/spreadsheets/d/e/"
-    "2PACX-1vTu-hMWPh-WbM--mMk7tZjJmgSlRDO6k8VFMk_lmoiNWP2-"
-    "_267ev0rBwXC5jPvDPenXmRQNeLB-8-H/pub?output=csv"
-)
-
-DEFAULT_ALL_DOMAINS_CSV_URL = (
+DEFAULT_AVAILABLE_DOMAINS_CSV_URL = (
     "https://docs.google.com/spreadsheets/d/e/"
     "2PACX-1vSqCdsEOjGGzEH5vKY7f_TMdobdDNYNcM24d9GDjGyrxZfHR4"
     "lomIuJUc6GzZLQ27OeQst-WYpIC0h1/pub?output=csv"
 )
 
-FEATURED_CSV_URL = os.getenv(
-    "DOMANID_FEATURED_CSV_URL",
-    DEFAULT_FEATURED_CSV_URL,
-)
-
-ALL_DOMAINS_CSV_URL = os.getenv(
-    "DOMANID_ALL_DOMAINS_CSV_URL",
-    DEFAULT_ALL_DOMAINS_CSV_URL,
+# DOMANID_ALL_DOMAINS_CSV_URL remains as a compatibility
+# fallback for existing local or deployment configuration.
+AVAILABLE_DOMAINS_CSV_URL = os.getenv(
+    "DOMANID_AVAILABLE_DOMAINS_CSV_URL",
+    os.getenv(
+        "DOMANID_ALL_DOMAINS_CSV_URL",
+        DEFAULT_AVAILABLE_DOMAINS_CSV_URL,
+    ),
 )
 
 
@@ -357,17 +352,25 @@ def get_column(
 
 def normalize_domain_record(
     row: dict[str, str],
-    *,
-    featured: bool = False,
 ) -> dict[str, Any] | None:
     """
-    Convert one Google Sheets row into the DomanID domain model.
+    Convert one available Google Sheets row into the
+    DomanID domain model.
+
+    Preserve every valid domain from Sheet1 and assign
+    its inventory state from Expired / Sold.
+
+    Status precedence:
+    1. Sold=yes    -> sold
+    2. Expired=yes -> expired
+    3. Otherwise   -> active
+
+    Premium is stored independently but is used by the site
+    only for active domains.
     """
     title = get_column(
         row,
         "Title",
-        "Domain",
-        "Domain Name",
     )
 
     if not title:
@@ -378,6 +381,27 @@ def normalize_domain_record(
     if not domain_key:
         return None
 
+    is_expired = truthy(
+        get_column(
+            row,
+            "Expired",
+        )
+    )
+
+    is_sold = truthy(
+        get_column(
+            row,
+            "Sold",
+        )
+    )
+
+    if is_sold:
+        status = "sold"
+    elif is_expired:
+        status = "expired"
+    else:
+        status = "active"
+
     description = get_column(
         row,
         "Description",
@@ -387,19 +411,15 @@ def normalize_domain_record(
         get_column(
             row,
             "Link",
-            "URL",
-            "Sale Link",
         )
     )
 
-    featured_column = get_column(
-        row,
-        "Featured Domains",
-        "Featured",
-        "Premium",
+    is_premium = truthy(
+        get_column(
+            row,
+            "Premium",
+        )
     )
-
-    is_featured = featured or truthy(featured_column)
 
     record: dict[str, Any] = {
         "title": title,
@@ -407,8 +427,13 @@ def normalize_domain_record(
         "slug": make_slug(title),
         "description": description,
         "link": link,
-        "featured": is_featured,
-        "status": "active",
+        # Keep "featured" for compatibility with existing
+        # generators while exposing the new inventory fields.
+        "featured": is_premium and status == "active",
+        "premium": is_premium,
+        "expired": is_expired,
+        "sold": is_sold,
+        "status": status,
     }
 
     return record
@@ -420,108 +445,47 @@ def normalize_domain_record(
 
 
 def merge_domain_data(
-    all_rows: list[dict[str, str]],
-    featured_rows: list[dict[str, str]],
+    rows: list[dict[str, str]],
 ) -> list[dict[str, Any]]:
     """
-    Create one authoritative domain list.
+    Create the authoritative domain inventory from Sheet1.
 
     Rules:
-    1. Sheet1 / All Domains is the primary inventory.
-    2. Featured Domains marks matching domains as featured.
-    3. Featured-only domains are retained for compatibility.
-    4. Duplicate domain names collapse into one record.
+    1. Every valid domain is retained.
+    2. Sold=yes assigns status=sold.
+    3. Expired=yes assigns status=expired unless already sold.
+    4. Otherwise status=active.
+    5. Premium=yes marks an active domain as featured.
+    6. Duplicate domain names collapse into one record.
     """
-    featured_map: dict[str, dict[str, str]] = {}
-
-    for row in featured_rows:
-        title = get_column(
-            row,
-            "Title",
-            "Domain",
-            "Domain Name",
-        )
-
-        key = normalize_domain_name(title)
-
-        if key:
-            featured_map[key] = row
-
     domains: dict[str, dict[str, Any]] = {}
 
-    for row in all_rows:
-        title = get_column(
-            row,
-            "Title",
-            "Domain",
-            "Domain Name",
-        )
-
-        key = normalize_domain_name(title)
-
-        if not key:
-            continue
-
-        record = normalize_domain_record(
-            row,
-            featured=key in featured_map,
-        )
+    for row in rows:
+        record = normalize_domain_record(row)
 
         if record is None:
             continue
 
+        key = record["domain"]
+
         if key in domains:
             print(
-                f"[WARN] Duplicate domain in all-domains sheet: "
+                "[WARN] Duplicate domain in Available Domains: "
                 f"{record['title']}"
             )
 
         domains[key] = record
 
-    for key, row in featured_map.items():
-        if key in domains:
-            domains[key]["featured"] = True
-
-            featured_record = normalize_domain_record(
-                row,
-                featured=True,
-            )
-
-            if featured_record:
-                if (
-                    not domains[key]["description"]
-                    and featured_record["description"]
-                ):
-                    domains[key]["description"] = (
-                        featured_record["description"]
-                    )
-
-                if (
-                    not domains[key]["link"]
-                    and featured_record["link"]
-                ):
-                    domains[key]["link"] = (
-                        featured_record["link"]
-                    )
-
-            continue
-
-        record = normalize_domain_record(
-            row,
-            featured=True,
-        )
-
-        if record:
-            print(
-                "[WARN] Featured domain is missing from Sheet1: "
-                f"{record['title']}"
-            )
-
-            domains[key] = record
+    status_order = {
+        "active": 0,
+        "sold": 1,
+        "expired": 2,
+    }
 
     result = sorted(
         domains.values(),
         key=lambda item: (
+            status_order.get(item["status"], 99),
             not item["featured"],
             item["domain"],
         ),
@@ -693,7 +657,7 @@ def print_report(
     print("DomanID Domain Data Report")
     print("=" * 60)
     print(f"Total domains     : {len(domains)}")
-    print(f"Featured domains  : {len(featured)}")
+    print(f"Premium domains   : {len(featured)}")
     print(f"Regular domains   : {len(regular)}")
     print(f"Domains with link : {links_count}")
     print(f"Output file       : {OUTPUT_FILE}")
@@ -726,7 +690,8 @@ def print_report(
 
 def main() -> int:
     """
-    Execute Phase 1A/1B domain data generation.
+    Generate available domain data from Available Domains /
+    Sheet1.
     """
     print()
     print("DomanID - Domain Data Loader")
@@ -734,32 +699,25 @@ def main() -> int:
     print("-" * 60)
 
     try:
-        all_csv = fetch_csv(
-            ALL_DOMAINS_CSV_URL,
-            "Sheet1 / All Domains",
+        available_csv = fetch_csv(
+            AVAILABLE_DOMAINS_CSV_URL,
+            "Available Domains / Sheet1",
         )
 
-        featured_csv = fetch_csv(
-            FEATURED_CSV_URL,
-            "Featured Domains",
-        )
-
-        all_rows = parse_csv(all_csv)
-        featured_rows = parse_csv(featured_csv)
+        rows = parse_csv(available_csv)
 
         print(
-            f"[INFO] Rows read from Sheet1: "
-            f"{len(all_rows)}"
+            f"[INFO] Rows read from Available Domains / Sheet1: "
+            f"{len(rows)}"
         )
+
+        domains = merge_domain_data(rows)
+
+        excluded_count = len(rows) - len(domains)
 
         print(
-            f"[INFO] Rows read from Featured Domains: "
-            f"{len(featured_rows)}"
-        )
-
-        domains = merge_domain_data(
-            all_rows,
-            featured_rows,
+            "[INFO] Rows excluded, invalid, or duplicated: "
+            f"{excluded_count}"
         )
 
         errors = validate_domains(domains)
@@ -772,15 +730,13 @@ def main() -> int:
                 print(f"  - {error}")
 
             print()
-            print(
-                "domains.json was NOT updated."
-            )
+            print("domains.json was NOT updated.")
 
             return 1
 
         if not domains:
             print(
-                "[ERROR] No valid domains were found."
+                "[ERROR] No available domains were found."
             )
 
             print(
@@ -796,7 +752,7 @@ def main() -> int:
         print_report(domains)
 
         print(
-            "[PASS] Domain data generated successfully."
+            "[PASS] Available domain data generated successfully."
         )
 
         return 0

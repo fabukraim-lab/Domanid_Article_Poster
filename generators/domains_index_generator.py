@@ -71,6 +71,38 @@ def load_domains() -> list[dict[str, Any]]:
     ]
 
 
+def load_sold_domains() -> list[dict[str, Any]]:
+    """
+    Load sold domains separately from the authoritative
+    domain inventory.
+
+    Sold domains are display-only and must never be mixed
+    with the active domain marketplace inventory.
+    """
+    payload = json.loads(
+        DATA_FILE.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    domains = payload.get(
+        "domains",
+        [],
+    )
+
+    return [
+        domain
+        for domain in domains
+        if str(
+            domain.get(
+                "status",
+                "",
+            )
+        ).strip().lower()
+        == "sold"
+    ]
+
+
 def render_card(
     domain: dict[str, Any]
 ) -> str:
@@ -162,6 +194,64 @@ def render_card(
                 </article>"""
 
 
+def render_sold_card(
+    domain: dict[str, Any]
+) -> str:
+    """
+    Render a sold domain as a display-only card.
+
+    Sold cards intentionally contain:
+    - no domain-page link
+    - no purchase link
+    - no View Domain button
+    - no InStock structured data
+    """
+    title = str(
+        domain.get("title")
+        or domain.get("domain")
+        or ""
+    ).strip()
+
+    description = str(
+        domain.get("description")
+        or "Previously sold through DomanID."
+    ).strip()
+
+    if not title:
+        raise ValueError(
+            "Sold domain record is missing a title."
+        )
+
+    search_text = (
+        f"{title} {description}"
+    ).lower()
+
+    return f"""                <article
+                    class="inventory-card inventory-card-sold"
+                    data-search="{esc(search_text)}"
+                >
+                    <div class="inventory-card-top">
+
+                        <h2>
+                            {esc(title)}
+                        </h2>
+
+                        <span class="inventory-sold-badge">
+                            Sold
+                        </span>
+
+                    </div>
+
+                    <p>
+                        {esc(description)}
+                    </p>
+
+                    <span class="inventory-sold-status">
+                        Sold Domain
+                    </span>
+                </article>"""
+
+
 def main() -> int:
 
     if not DATA_FILE.exists():
@@ -175,6 +265,7 @@ def main() -> int:
         )
 
     domains = load_domains()
+    sold_domains = load_sold_domains()
 
     if not domains:
         raise RuntimeError(
@@ -184,6 +275,11 @@ def main() -> int:
     cards = "\n\n".join(
         render_card(domain)
         for domain in domains
+    )
+
+    sold_cards = "\n\n".join(
+        render_sold_card(domain)
+        for domain in sold_domains
     )
 
     source = TEMPLATE_FILE.read_text(
@@ -202,6 +298,12 @@ def main() -> int:
             "from inventory template."
         )
 
+    if "{{SOLD_DOMAIN_CARDS}}" not in source:
+        raise RuntimeError(
+            "SOLD_DOMAIN_CARDS placeholder missing "
+            "from inventory template."
+        )
+
     source = source.replace(
         "{{DOMAIN_COUNT}}",
         str(len(domains)),
@@ -210,6 +312,11 @@ def main() -> int:
     source = source.replace(
         "{{DOMAIN_CARDS}}",
         cards,
+    )
+
+    source = source.replace(
+        "{{SOLD_DOMAIN_CARDS}}",
+        sold_cards,
     )
 
     source = "\n".join(
@@ -254,6 +361,10 @@ def main() -> int:
 
     print(
         f"Premium domains   : {featured_count}"
+    )
+
+    print(
+        f"Sold domains      : {len(sold_domains)}"
     )
 
     print(

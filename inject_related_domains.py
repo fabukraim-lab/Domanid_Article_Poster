@@ -393,15 +393,22 @@ def remove_existing_related_block(
     content: str,
 ) -> str:
 
+    # Remove the complete managed block together with
+    # surrounding blank lines. Replace them with one canonical
+    # two-newline separator so repeated runs remain idempotent.
     managed_pattern = re.compile(
-        re.escape(START_MARKER)
+        r"(?:[ 	]*\n)*"
+        + r"[ 	]*"
+        + re.escape(START_MARKER)
         + r".*?"
-        + re.escape(END_MARKER),
+        + re.escape(END_MARKER)
+        + r"[ 	]*"
+        + r"(?:\n[ 	]*)*",
         re.S,
     )
 
     content = managed_pattern.sub(
-        "",
+        "\n\n",
         content,
     )
 
@@ -492,31 +499,23 @@ def process_article(
     # True idempotency:
     # if the currently generated managed block is already
     # present exactly as expected, do not rewrite the file.
-    if (
-        block
-        and START_MARKER in original
-        and END_MARKER in original
-        and block in original
-    ):
-        return False
-
     updated = insert_related_block(
         cleaned,
         block,
     )
 
+    # Normalize before comparison so repeated runs are
+    # genuinely idempotent. This also cleans legacy spacing
+    # around the managed Related Domains block.
+    updated = "\n".join(
+        line.rstrip()
+        for line in updated.splitlines()
+    ) + "\n"
+
     if updated == original:
         return False
 
     if not dry_run:
-        # Normalize generated HTML before writing.
-        # Prevent trailing whitespace from being reintroduced
-        # whenever related domains are injected.
-        updated = "\n".join(
-            line.rstrip()
-            for line in updated.splitlines()
-        ) + "\n"
-
         filepath.write_text(
             updated,
             encoding="utf-8",
