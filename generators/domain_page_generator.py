@@ -1088,11 +1088,21 @@ def generate_domain_page(
 
     output_file = output_dir / "index.html"
 
+    rendered = render_domain_page(
+        domain,
+        all_domains,
+    )
+
+    # Normalize generated HTML before writing.
+    # This prevents trailing whitespace from being emitted
+    # by dynamic multiline HTML fragments.
+    rendered = "\n".join(
+        line.rstrip()
+        for line in rendered.splitlines()
+    ) + "\n"
+
     output_file.write_text(
-        render_domain_page(
-            domain,
-            all_domains,
-        ),
+        rendered,
         encoding="utf-8",
         newline="\n",
     )

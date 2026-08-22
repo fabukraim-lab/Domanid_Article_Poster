@@ -699,12 +699,24 @@ def check_local_links() -> int:
         ).resolve(),
     }
 
+    excluded_dirs = {
+        ".git",
+        "_backup",
+        "__pycache__",
+        ".venv",
+        "venv",
+        "node_modules",
+    }
+
     html_files = [
         path
         for path in PROJECT_ROOT.rglob(
             "*.html"
         )
-        if ".git" not in path.parts
+        if not any(
+            part in excluded_dirs
+            for part in path.parts
+        )
         and path.resolve() not in excluded_templates
     ]
 

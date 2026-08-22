@@ -9,7 +9,7 @@ on:
 jobs:
   publish-blog:
     runs-on: ubuntu-latest
-    
+
     # إعطاء الصلاحية للبوت لكي يتمكن من رفع الملفات
     permissions:
       contents: write
