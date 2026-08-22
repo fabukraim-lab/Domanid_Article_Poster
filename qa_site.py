@@ -776,8 +776,13 @@ def check_exact_duplicate_article_bodies() -> None:
 
 def check_blog_index_canonical() -> None:
     """
-    Verify that the blog index exposes exactly one
-    canonical URL pointing to the clean /articles/ URL.
+    Verify that all primary URL signals on the blog index
+    point to the clean /articles/ URL.
+
+    Signals checked:
+    - canonical
+    - og:url
+    - Blog JSON-LD url
     """
     path = ARTICLES_DIR / "index.html"
 
@@ -791,6 +796,12 @@ def check_blog_index_canonical() -> None:
         path
     )
 
+    expected = "https://domanid.com/articles/"
+
+    # --------------------------------------------------------
+    # Canonical
+    # --------------------------------------------------------
+
     canonical_tags = re.findall(
         r'<link\b[^>]*rel=["\']canonical["\'][^>]*>',
         html,
@@ -802,29 +813,82 @@ def check_blog_index_canonical() -> None:
             "Blog index must contain exactly one canonical "
             f"link (found {len(canonical_tags)})."
         )
-        return
+    else:
+        href_match = re.search(
+            r'href=["\']([^"\']+)["\']',
+            canonical_tags[0],
+            flags=re.I,
+        )
 
-    href_match = re.search(
-        r'href=["\']([^"\']+)["\']',
-        canonical_tags[0],
-        flags=re.I,
-    )
-
-    expected = "https://domanid.com/articles/"
-
-    if (
-        not href_match
-        or href_match.group(1) != expected
-    ):
         actual = (
             href_match.group(1)
             if href_match
-            else "missing href"
+            else None
         )
 
+        if actual != expected:
+            fail(
+                "Blog index canonical is incorrect: "
+                f"{actual!r}; expected {expected!r}"
+            )
+
+    # --------------------------------------------------------
+    # Open Graph URL
+    # --------------------------------------------------------
+
+    og_match = re.search(
+        r'<meta\b[^>]*property=["\']og:url["\']'
+        r'[^>]*content=["\']([^"\']+)["\']',
+        html,
+        flags=re.I,
+    )
+
+    og_url = (
+        og_match.group(1)
+        if og_match
+        else None
+    )
+
+    if og_url != expected:
         fail(
-            "Blog index canonical is incorrect: "
-            f"{actual!r}; expected {expected!r}"
+            "Blog index og:url is incorrect: "
+            f"{og_url!r}; expected {expected!r}"
+        )
+
+    # --------------------------------------------------------
+    # Blog JSON-LD URL
+    # --------------------------------------------------------
+
+    json_ld_blocks = re.findall(
+        r'<script\s+type=["\']application/ld\+json["\']'
+        r'[^>]*>(.*?)</script>',
+        html,
+        flags=re.I | re.S,
+    )
+
+    blog_json_url = None
+
+    for block in json_ld_blocks:
+        try:
+            data = json.loads(
+                block
+            )
+        except Exception:
+            continue
+
+        if (
+            isinstance(data, dict)
+            and data.get("@type") == "Blog"
+        ):
+            blog_json_url = data.get(
+                "url"
+            )
+            break
+
+    if blog_json_url != expected:
+        fail(
+            "Blog index JSON-LD URL is incorrect: "
+            f"{blog_json_url!r}; expected {expected!r}"
         )
 
 
