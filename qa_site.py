@@ -2,6 +2,7 @@
 
 import json
 import re
+import hashlib
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
@@ -684,6 +685,95 @@ def check_sitemap(
         )
 
 
+def check_exact_duplicate_article_bodies() -> None:
+    """
+    Detect exact duplicate published article bodies.
+
+    Article body HTML is normalized to visible text before
+    hashing so insignificant markup/spacing differences do
+    not hide an otherwise identical article.
+    """
+    seen: dict[str, Path] = {}
+
+    for path in sorted(
+        ARTICLES_DIR.glob("*.html")
+    ):
+        if path.name.lower() == "index.html":
+            continue
+
+        html = read_text(
+            path
+        )
+
+        body_match = re.search(
+            r'<div\s+class=["\']article-body["\'][^>]*>'
+            r'(.*?)'
+            r'</div>',
+            html,
+            flags=re.I | re.S,
+        )
+
+        if not body_match:
+            fail(
+                "Article body not found while checking "
+                f"duplicates: articles/{path.name}"
+            )
+            continue
+
+        body = body_match.group(1)
+
+        body = re.sub(
+            r"<script\b.*?</script>",
+            " ",
+            body,
+            flags=re.I | re.S,
+        )
+
+        body = re.sub(
+            r"<style\b.*?</style>",
+            " ",
+            body,
+            flags=re.I | re.S,
+        )
+
+        body = re.sub(
+            r"<[^>]+>",
+            " ",
+            body,
+        )
+
+        body = re.sub(
+            r"\s+",
+            " ",
+            body,
+        ).strip().lower()
+
+        if not body:
+            fail(
+                "Article body is empty: "
+                f"articles/{path.name}"
+            )
+            continue
+
+        digest = hashlib.sha256(
+            body.encode("utf-8")
+        ).hexdigest()
+
+        original = seen.get(
+            digest
+        )
+
+        if original is not None:
+            fail(
+                "Exact duplicate article body detected: "
+                f"articles/{original.name} <-> "
+                f"articles/{path.name}"
+            )
+            continue
+
+        seen[digest] = path
+
+
 def check_blog_index_canonical() -> None:
     """
     Verify that the blog index exposes exactly one
@@ -1009,6 +1099,8 @@ def main() -> int:
     )
 
     check_article_h1_structure()
+
+    check_exact_duplicate_article_bodies()
 
     check_blog_index_canonical()
 
