@@ -684,6 +684,100 @@ def check_sitemap(
         )
 
 
+def check_blog_index_canonical() -> None:
+    """
+    Verify that the blog index exposes exactly one
+    canonical URL pointing to the clean /articles/ URL.
+    """
+    path = ARTICLES_DIR / "index.html"
+
+    if not path.exists():
+        fail(
+            "Blog index not found: articles/index.html"
+        )
+        return
+
+    html = read_text(
+        path
+    )
+
+    canonical_tags = re.findall(
+        r'<link\b[^>]*rel=["\']canonical["\'][^>]*>',
+        html,
+        flags=re.I,
+    )
+
+    if len(canonical_tags) != 1:
+        fail(
+            "Blog index must contain exactly one canonical "
+            f"link (found {len(canonical_tags)})."
+        )
+        return
+
+    href_match = re.search(
+        r'href=["\']([^"\']+)["\']',
+        canonical_tags[0],
+        flags=re.I,
+    )
+
+    expected = "https://domanid.com/articles/"
+
+    if (
+        not href_match
+        or href_match.group(1) != expected
+    ):
+        actual = (
+            href_match.group(1)
+            if href_match
+            else "missing href"
+        )
+
+        fail(
+            "Blog index canonical is incorrect: "
+            f"{actual!r}; expected {expected!r}"
+        )
+
+
+def check_article_h1_structure() -> None:
+    """
+    Verify that every published article contains exactly
+    one page-level H1 heading.
+
+    The article template owns the H1. Article body content
+    must use H2 or lower heading levels.
+    """
+    if not ARTICLES_DIR.exists():
+        fail(
+            "Articles directory not found."
+        )
+        return
+
+    for path in sorted(
+        ARTICLES_DIR.glob("*.html")
+    ):
+        if path.name.lower() == "index.html":
+            continue
+
+        html = read_text(
+            path
+        )
+
+        h1_count = len(
+            re.findall(
+                r"<h1\b",
+                html,
+                flags=re.I,
+            )
+        )
+
+        if h1_count != 1:
+            fail(
+                "Article must contain exactly one H1: "
+                f"articles/{path.name} "
+                f"(found {h1_count})"
+            )
+
+
 def check_local_links() -> int:
     excluded_templates = {
         (PROJECT_ROOT / "article_template.html").resolve(),
@@ -913,6 +1007,10 @@ def main() -> int:
             active_slugs
         )
     )
+
+    check_article_h1_structure()
+
+    check_blog_index_canonical()
 
     check_sitemap(
         active_slugs

@@ -134,6 +134,22 @@ def generate_article(row, template, all_articles=None):
     if len(row) >= 9 and row[8].strip():
         image = row[8].strip()
 
+    # The page template owns the single page-level H1.
+    # Any H1 supplied inside FullContent must therefore be
+    # demoted to H2 before the content enters the template.
+    content = re.sub(
+        r"<\s*h1\b([^>]*)>",
+        r"<h2\1>",
+        content,
+        flags=re.I,
+    )
+    content = re.sub(
+        r"</\s*h1\s*>",
+        "</h2>",
+        content,
+        flags=re.I,
+    )
+
     rt = reading_time(content)
     date_iso = to_iso_date(date)
     related = related_articles_html(slug, all_articles) if all_articles else ""
