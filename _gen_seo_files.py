@@ -44,7 +44,7 @@ static = [
     ("contact.html", 0.7, "monthly"),
     ("terms.html", 0.3, "yearly"),
     ("privacy.html", 0.3, "yearly"),
-    ("articles/index.html", 0.9, "daily"),
+    ("articles/", 0.9, "daily"),
     ("domains/", 0.9, "weekly"),
 ]
 
@@ -137,7 +137,7 @@ rss = f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>DomanID Blog - Domain Investing Insights</title>
-    <link>{base}/articles/index.html</link>
+    <link>{base}/articles/</link>
     <description>Expert insights on domain investing, premium domain strategies, SEO, and digital asset management.</description>
     <language>en</language>
     <atom:link href="{base}/rss.xml" rel="self" type="application/rss+xml"/>

@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>DomanID Blog - Domain Investing Insights</title>
-    <link>https://domanid.com/articles/index.html</link>
+    <link>https://domanid.com/articles/</link>
     <description>Expert insights on domain investing, premium domain strategies, SEO, and digital asset management.</description>
     <language>en</language>
     <atom:link href="https://domanid.com/rss.xml" rel="self" type="application/rss+xml"/>

@@ -26,7 +26,7 @@
     <changefreq>yearly</changefreq>
   </url>
   <url>
-    <loc>https://domanid.com/articles/index.html</loc>
+    <loc>https://domanid.com/articles/</loc>
     <priority>0.9</priority>
     <changefreq>daily</changefreq>
   </url>

@@ -650,6 +650,30 @@ def check_sitemap(
             "Duplicate URLs found in sitemap.xml"
         )
 
+    expected_blog_url = (
+        "https://domanid.com/articles/"
+    )
+
+    legacy_blog_url = (
+        "https://domanid.com/articles/index.html"
+    )
+
+    if normalized.count(
+        expected_blog_url
+    ) != 1:
+        fail(
+            "Sitemap must contain exactly one clean "
+            "blog index URL: "
+            f"{expected_blog_url}"
+        )
+
+    if legacy_blog_url in normalized:
+        fail(
+            "Legacy blog index URL remains "
+            "in sitemap.xml: "
+            f"{legacy_blog_url}"
+        )
+
     sitemap_slugs = set()
 
     for url in normalized:
@@ -682,6 +706,53 @@ def check_sitemap(
         fail(
             f"Inactive domain remains in sitemap: "
             f"{slug}"
+        )
+
+
+def check_rss_blog_url() -> None:
+    """
+    Verify that the RSS channel links to the clean
+    /articles/ blog index URL.
+    """
+    if not RSS_FILE.exists():
+        return
+
+    xml = read_text(
+        RSS_FILE
+    )
+
+    channel_match = re.search(
+        r"<channel\b[^>]*>(.*?)</channel>",
+        xml,
+        flags=re.I | re.S,
+    )
+
+    if not channel_match:
+        fail(
+            "RSS channel element is missing."
+        )
+        return
+
+    link_match = re.search(
+        r"<link>(.*?)</link>",
+        channel_match.group(1),
+        flags=re.I | re.S,
+    )
+
+    actual = (
+        link_match.group(1).strip()
+        if link_match
+        else None
+    )
+
+    expected = (
+        "https://domanid.com/articles/"
+    )
+
+    if actual != expected:
+        fail(
+            "RSS channel link is incorrect: "
+            f"{actual!r}; expected {expected!r}"
         )
 
 
@@ -1171,6 +1242,8 @@ def main() -> int:
     check_sitemap(
         active_slugs
     )
+
+    check_rss_blog_url()
 
     links_checked = (
         check_local_links()
