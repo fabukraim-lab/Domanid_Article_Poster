@@ -790,6 +790,157 @@ def check_article_legacy_blog_urls() -> None:
             )
 
 
+def check_near_duplicate_article_bodies() -> None:
+    """
+    Detect strong near-duplicate published article bodies.
+
+    Uses 3-word shingles with two complementary metrics:
+
+    - Jaccard similarity measures overall shared structure.
+    - Maximum containment detects when a large portion of
+      either article is contained inside the other.
+
+    Calibrated against the current DomanID article corpus.
+
+    Blocking threshold:
+    - Jaccard >= 45%
+    - Max containment >= 60%
+
+    Both conditions must be true.
+    """
+    articles = []
+
+    for path in sorted(
+        ARTICLES_DIR.glob("*.html")
+    ):
+        if path.name.lower() == "index.html":
+            continue
+
+        html = read_text(
+            path
+        )
+
+        body_match = re.search(
+            r'<div\s+class=["\']article-body["\'][^>]*>'
+            r'(.*?)'
+            r'</div>',
+            html,
+            flags=re.I | re.S,
+        )
+
+        if not body_match:
+            continue
+
+        body = body_match.group(1)
+
+        body = re.sub(
+            r"<script\b.*?</script>",
+            " ",
+            body,
+            flags=re.I | re.S,
+        )
+
+        body = re.sub(
+            r"<style\b.*?</style>",
+            " ",
+            body,
+            flags=re.I | re.S,
+        )
+
+        body = re.sub(
+            r"<[^>]+>",
+            " ",
+            body,
+        )
+
+        body = re.sub(
+            r"[^a-zA-Z0-9\s]",
+            " ",
+            body,
+        )
+
+        words = re.sub(
+            r"\s+",
+            " ",
+            body,
+        ).strip().lower().split()
+
+        if len(words) < 3:
+            continue
+
+        shingles = {
+            tuple(words[i:i + 3])
+            for i in range(
+                len(words) - 2
+            )
+        }
+
+        if shingles:
+            articles.append(
+                (
+                    path,
+                    shingles,
+                )
+            )
+
+    for i in range(
+        len(articles)
+    ):
+        path_a, shingles_a = articles[i]
+
+        for j in range(
+            i + 1,
+            len(articles)
+        ):
+            path_b, shingles_b = articles[j]
+
+            shared = (
+                shingles_a
+                & shingles_b
+            )
+
+            union = (
+                shingles_a
+                | shingles_b
+            )
+
+            if not union:
+                continue
+
+            jaccard = (
+                len(shared)
+                / len(union)
+            )
+
+            containment_a = (
+                len(shared)
+                / len(shingles_a)
+            )
+
+            containment_b = (
+                len(shared)
+                / len(shingles_b)
+            )
+
+            max_containment = max(
+                containment_a,
+                containment_b,
+            )
+
+            if (
+                jaccard >= 0.45
+                and max_containment >= 0.60
+            ):
+                fail(
+                    "Near-duplicate article bodies detected "
+                    f"(Jaccard {jaccard * 100:.2f}%, "
+                    f"max containment "
+                    f"{max_containment * 100:.2f}%): "
+                    f"articles/{path_a.name} <-> "
+                    f"articles/{path_b.name}"
+                )
+
+
 def check_exact_duplicate_article_bodies() -> None:
     """
     Detect exact duplicate published article bodies.
@@ -1371,6 +1522,8 @@ def main() -> int:
     check_article_h1_structure()
 
     check_exact_duplicate_article_bodies()
+
+    check_near_duplicate_article_bodies()
 
     check_blog_index_canonical()
 

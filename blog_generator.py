@@ -309,6 +309,179 @@ def update_index(articles=None):
     )
 
 
+def rebuild_related_articles(dry_run=True):
+    """
+    Rebuild existing Related Articles blocks from the
+    published article inventory.
+
+    articles/*.html is the source of truth.
+
+    Only existing related-article blocks are replaced.
+    Article bodies, metadata, canonicals, and other page
+    content are intentionally left untouched.
+
+    When dry_run=True, no files are modified.
+    """
+    published_articles = load_articles()
+
+    article_by_slug = {
+        article["slug"]: article
+        for article in published_articles
+    }
+
+    changed = []
+    missing_blocks = []
+
+    block_pattern = re.compile(
+        r'(?P<start>'
+        r'[ \t]*<!-- Related Articles -->\s*'
+        r'<section\b[^>]*'
+        r'class=["\']related-articles["\'][^>]*>'
+        r')'
+        r'.*?'
+        r'(?P<end></section>)',
+        flags=re.I | re.S,
+    )
+
+    for article in published_articles:
+        slug = article["slug"]
+        filename = article["filename"]
+
+        filepath = os.path.join(
+            ARTICLES_DIR,
+            filename,
+        )
+
+        with open(
+            filepath,
+            "r",
+            encoding="utf-8",
+            errors="strict",
+        ) as f:
+            content = f.read()
+
+        match = block_pattern.search(
+            content
+        )
+
+        if not match:
+            missing_blocks.append(
+                filename
+            )
+            continue
+
+        related = related_articles_html(
+            slug,
+            published_articles,
+        )
+
+        replacement = (
+            match.group("start")
+            + related
+            + match.group("end")
+        )
+
+        new_content = (
+            content[:match.start()]
+            + replacement
+            + content[match.end():]
+        )
+
+        if new_content == content:
+            continue
+
+        changed.append(
+            filename
+        )
+
+        if not dry_run:
+            with open(
+                filepath,
+                "w",
+                encoding="utf-8",
+                newline="\n",
+            ) as f:
+                f.write(
+                    new_content
+                )
+
+    print("=" * 72)
+    print("RELATED ARTICLES REBUILD")
+    print("=" * 72)
+    print(
+        "PUBLISHED ARTICLES :",
+        len(article_by_slug),
+    )
+    print(
+        "WOULD CHANGE       :"
+        if dry_run
+        else "CHANGED            :",
+        len(changed),
+    )
+    print(
+        "MISSING BLOCKS     :",
+        len(missing_blocks),
+    )
+    print(
+        "DRY RUN            :",
+        dry_run,
+    )
+
+    if changed:
+        print()
+        print(
+            "FILES THAT "
+            + (
+                "WOULD CHANGE:"
+                if dry_run
+                else "CHANGED:"
+            )
+        )
+
+        for filename in changed:
+            print(
+                " ",
+                filename,
+            )
+
+    if missing_blocks:
+        print()
+        print(
+            "FILES WITHOUT RELATED BLOCK:"
+        )
+
+        for filename in missing_blocks:
+            print(
+                " ",
+                filename,
+            )
+
+    print()
+
+    if dry_run:
+        print(
+            "[INFO] Dry run only - "
+            "no article files modified"
+        )
+    else:
+        print(
+            "[PASS] Related Articles "
+            "blocks rebuilt"
+        )
+
+    return {
+        "published": len(
+            published_articles
+        ),
+        "changed": len(
+            changed
+        ),
+        "missing_blocks": len(
+            missing_blocks
+        ),
+    }
+
+
 def inject_related_into_article(slug, all_articles):
     filepath = os.path.join(ARTICLES_DIR, f"{slug}.html")
     if not os.path.exists(filepath):
