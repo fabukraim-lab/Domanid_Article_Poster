@@ -1003,6 +1003,107 @@ def check_article_h1_structure() -> None:
             )
 
 
+def check_content_seo_warnings() -> None:
+    """
+    Report non-blocking content-level SEO warnings.
+
+    These warnings belong to the separate content
+    optimization track and must not fail the technical
+    site build.
+    """
+    title_map: dict[str, list[str]] = {}
+    description_map: dict[str, list[str]] = {}
+
+    for path in sorted(
+        ARTICLES_DIR.glob("*.html")
+    ):
+        if path.name.lower() == "index.html":
+            continue
+
+        html = read_text(
+            path
+        )
+
+        title_match = re.search(
+            r"<title\b[^>]*>(.*?)</title>",
+            html,
+            flags=re.I | re.S,
+        )
+
+        description_match = re.search(
+            r'<meta\b[^>]*name=["\']description["\']'
+            r'[^>]*content=["\']([^"\']*)["\']',
+            html,
+            flags=re.I | re.S,
+        )
+
+        if title_match:
+            title = re.sub(
+                r"\s+",
+                " ",
+                title_match.group(1),
+            ).strip()
+
+            if len(title) > 70:
+                warn(
+                    "Long article title "
+                    f"({len(title)} chars): "
+                    f"articles/{path.name}"
+                )
+
+            title_map.setdefault(
+                title.lower(),
+                [],
+            ).append(
+                path.name
+            )
+
+        if description_match:
+            description = re.sub(
+                r"\s+",
+                " ",
+                description_match.group(1),
+            ).strip()
+
+            if len(description) > 180:
+                warn(
+                    "Long meta description "
+                    f"({len(description)} chars): "
+                    f"articles/{path.name}"
+                )
+
+            description_map.setdefault(
+                description.lower(),
+                [],
+            ).append(
+                path.name
+            )
+
+    for value, paths in sorted(
+        title_map.items()
+    ):
+        if value and len(paths) > 1:
+            warn(
+                "Duplicate article title: "
+                + " <-> ".join(
+                    f"articles/{name}"
+                    for name in paths
+                )
+            )
+
+    for value, paths in sorted(
+        description_map.items()
+    ):
+        if value and len(paths) > 1:
+            warn(
+                "Duplicate article meta description: "
+                + " <-> ".join(
+                    f"articles/{name}"
+                    for name in paths
+                )
+            )
+
+
 def check_local_links() -> int:
     excluded_templates = {
         (PROJECT_ROOT / "article_template.html").resolve(),
@@ -1244,6 +1345,8 @@ def main() -> int:
     )
 
     check_rss_blog_url()
+
+    check_content_seo_warnings()
 
     links_checked = (
         check_local_links()
