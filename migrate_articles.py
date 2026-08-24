@@ -129,7 +129,7 @@ def migrate_article(filepath, meta, all_articles):
         "@type": "BreadcrumbList",
         "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://domanid.com/"},
-            {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://domanid.com/articles/index.html"},
+            {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://domanid.com/articles/"},
             {"@type": "ListItem", "position": 3, "name": "%s"}
         ]
     }

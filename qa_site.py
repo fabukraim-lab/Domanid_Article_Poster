@@ -756,6 +756,40 @@ def check_rss_blog_url() -> None:
         )
 
 
+def check_article_legacy_blog_urls() -> None:
+    """
+    Reject published article pages that still reference
+    the legacy /articles/index.html blog URL.
+
+    All article-level references to the blog index must use:
+    https://domanid.com/articles/
+    """
+    legacy_url = (
+        "https://domanid.com/articles/index.html"
+    )
+
+    for path in sorted(
+        ARTICLES_DIR.glob("*.html")
+    ):
+        if path.name.lower() == "index.html":
+            continue
+
+        html = read_text(
+            path
+        )
+
+        count = html.count(
+            legacy_url
+        )
+
+        if count:
+            fail(
+                "Legacy blog index URL found in article "
+                f"({count} occurrence(s)): "
+                f"articles/{path.name}"
+            )
+
+
 def check_exact_duplicate_article_bodies() -> None:
     """
     Detect exact duplicate published article bodies.
@@ -1345,6 +1379,8 @@ def main() -> int:
     )
 
     check_rss_blog_url()
+
+    check_article_legacy_blog_urls()
 
     check_content_seo_warnings()
 
