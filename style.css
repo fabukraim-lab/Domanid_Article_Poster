@@ -4470,6 +4470,187 @@ body {
     font-weight: 900;
 }
 
+/* Commercial Intelligence */
+
+.domain-detail-main .commercial-intelligence-section {
+    position: relative;
+    padding: 32px;
+    border: 1px solid #dce5ef;
+    border-radius: 20px;
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f8fbff 100%
+        );
+    box-shadow:
+        0 12px 34px
+        rgba(15, 23, 42, 0.045);
+}
+
+.domain-detail-main .commercial-section-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 14px;
+}
+
+.domain-detail-main .commercial-section-heading h2 {
+    margin: 5px 0 0;
+    color: #0b1426;
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+    font-size:
+        clamp(
+            1.85rem,
+            3vw,
+            2.55rem
+        );
+    line-height: 1.17;
+    letter-spacing: -0.03em;
+}
+
+.domain-detail-main .commercial-eyebrow {
+    display: block;
+    color: #2563eb;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+}
+
+.domain-detail-main .commercial-analysis-badge {
+    flex: 0 0 auto;
+    padding: 7px 11px;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.domain-detail-main .commercial-intelligence-note {
+    max-width: 820px;
+    margin: 0;
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.72;
+}
+
+.domain-detail-main .commercial-info-grid {
+    margin-top: 26px;
+    display: grid;
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+    gap: 12px;
+}
+
+.domain-detail-main .commercial-info-grid.commercial-info-grid--keyword {
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+}
+
+
+.domain-detail-main .commercial-info-item {
+    min-width: 0;
+    padding: 17px 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 13px;
+    background: #ffffff;
+}
+
+.domain-detail-main .commercial-info-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #94a3b8;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.domain-detail-main .commercial-info-value {
+    display: block;
+    color: #1e293b;
+    font-size: 0.92rem;
+    font-weight: 750;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.domain-detail-main .commercial-score-grid {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+    gap: 12px;
+}
+
+.domain-detail-main .commercial-score-card {
+    min-width: 0;
+    min-height: 142px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid #dce5ef;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow:
+        0 7px 20px
+        rgba(15, 23, 42, 0.035);
+}
+
+.domain-detail-main .commercial-score-label {
+    color: #64748b;
+    font-size: 0.76rem;
+    font-weight: 750;
+    letter-spacing: 0.025em;
+}
+
+.domain-detail-main .commercial-score-value {
+    color: #0f172a;
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+    font-size: 1.72rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.025em;
+}
+
+.domain-detail-main .commercial-ai-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 0.61rem;
+    font-weight: 800;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+}
+
+
 /* Related Domains */
 
 .related-domain-grid {
@@ -4595,6 +4776,12 @@ body {
         padding: 60px 28px;
     }
 
+    .domain-detail-main .commercial-info-grid,
+    .domain-detail-main .commercial-score-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
     .related-domain-grid {
         grid-template-columns:
             repeat(2, minmax(0, 1fr));
@@ -4639,6 +4826,44 @@ body {
 
     .domain-content-section {
         margin-top: 54px;
+    }
+
+    .domain-detail-main .commercial-intelligence-section {
+        padding: 24px 18px;
+        border-radius: 16px;
+    }
+
+    .domain-detail-main .commercial-section-heading {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .domain-detail-main .commercial-analysis-badge {
+        align-self: flex-start;
+    }
+
+    .domain-detail-main .commercial-intelligence-note {
+        font-size: 0.84rem;
+        line-height: 1.65;
+    }
+
+    .domain-detail-main .commercial-info-grid,
+    .domain-detail-main .commercial-score-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .domain-detail-main .commercial-info-item {
+        padding: 15px 16px;
+    }
+
+    .domain-detail-main .commercial-score-card {
+        min-height: 118px;
+        padding: 18px;
+    }
+
+    .domain-detail-main .commercial-score-value {
+        font-size: 1.55rem;
     }
 
     .domain-value-grid,

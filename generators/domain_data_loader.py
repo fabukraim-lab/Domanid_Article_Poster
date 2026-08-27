@@ -216,6 +216,66 @@ def normalize_link(value: str) -> str:
     return f"https://{value}"
 
 
+def normalize_integer_metric(value: Any) -> int | None:
+    """
+    Normalize an optional whole-number metric.
+
+    Examples:
+        "18,100" -> 18100
+        "18100"  -> 18100
+        ""       -> None
+
+    Raises ValueError for non-numeric input.
+    """
+    value = clean_text(value)
+
+    if not value:
+        return None
+
+    normalized = value.replace(",", "").strip()
+
+    if not re.fullmatch(r"\d+", normalized):
+        raise ValueError(
+            f"Invalid integer metric: {value!r}"
+        )
+
+    return int(normalized)
+
+
+def normalize_decimal_metric(value: Any) -> float | None:
+    """
+    Normalize an optional decimal/currency metric.
+
+    Examples:
+        "$47.20" -> 47.2
+        "47.20"  -> 47.2
+        ""       -> None
+
+    Raises ValueError for non-numeric input.
+    """
+    value = clean_text(value)
+
+    if not value:
+        return None
+
+    normalized = (
+        value
+        .replace("$", "")
+        .replace(",", "")
+        .strip()
+    )
+
+    if not re.fullmatch(
+        r"\d+(?:\.\d+)?",
+        normalized,
+    ):
+        raise ValueError(
+            f"Invalid decimal metric: {value!r}"
+        )
+
+    return float(normalized)
+
+
 def truthy(value: str) -> bool:
     """
     Interpret common spreadsheet truthy values.
@@ -421,6 +481,89 @@ def normalize_domain_record(
         )
     )
 
+    # --------------------------------------------------------
+    # D1 - Commercial search metrics
+    # --------------------------------------------------------
+    #
+    # These values are optional and come directly from the
+    # authoritative Google Sheets inventory. Missing metrics
+    # remain empty rather than being estimated or invented.
+    #
+    primary_keyword = get_column(
+        row,
+        "Primary Keyword",
+        "PrimaryKeyword",
+        "Keyword",
+    )
+
+    monthly_searches = normalize_integer_metric(
+        get_column(
+            row,
+            "Monthly Searches",
+            "Monthly Search Volume",
+            "Search Volume",
+        )
+    )
+
+    cpc = normalize_decimal_metric(
+        get_column(
+            row,
+            "CPC",
+            "CPC USD",
+            "Estimated CPC",
+        )
+    )
+
+    competition = get_column(
+        row,
+        "Competition",
+        "Paid Competition",
+    )
+
+    competition_level = get_column(
+        row,
+        "Competition Level",
+        "Paid Competition Level",
+    )
+
+    low_top_of_page_bid = normalize_decimal_metric(
+        get_column(
+            row,
+            "Low Top of Page Bid",
+            "Low Bid",
+            "Low Top Bid",
+        )
+    )
+
+    high_top_of_page_bid = normalize_decimal_metric(
+        get_column(
+            row,
+            "High Top of Page Bid",
+            "High Bid",
+            "High Top Bid",
+        )
+    )
+
+    search_location = get_column(
+        row,
+        "Search Location",
+        "Location",
+        "Market",
+    )
+
+    metrics_source = get_column(
+        row,
+        "Metrics Source",
+        "Data Source",
+    )
+
+    metrics_updated = get_column(
+        row,
+        "Metrics Updated",
+        "Metrics Updated At",
+        "Last Updated",
+    )
+
     record: dict[str, Any] = {
         "title": title,
         "domain": domain_key,
@@ -434,6 +577,18 @@ def normalize_domain_record(
         "expired": is_expired,
         "sold": is_sold,
         "status": status,
+
+        # D1 commercial search metrics.
+        "primary_keyword": primary_keyword,
+        "monthly_searches": monthly_searches,
+        "cpc": cpc,
+        "competition": competition,
+        "competition_level": competition_level,
+        "low_top_of_page_bid": low_top_of_page_bid,
+        "high_top_of_page_bid": high_top_of_page_bid,
+        "search_location": search_location,
+        "metrics_source": metrics_source,
+        "metrics_updated": metrics_updated,
     }
 
     return record
@@ -587,7 +742,7 @@ def build_output_payload(
     )
 
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "source": "google_sheets",
         "domain_count": len(domains),
         "featured_count": featured_count,

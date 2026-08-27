@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "source": "verified_market_data",
+  "premium_domain_count": 5,
+  "domains": {
+    "bestlawyercaraccident.com": {
+      "domain": "bestlawyercaraccident.com",
+      "domain_type": "keyword",
+      "estimated_value": {
+        "amount_usd": 1051,
+        "source": "AffiliateMarketingDude GoDaddy Appraisal Tool",
+        "checked_date": "2026-08-27"
+      },
+      "keyword_data": {
+        "primary_keyword": "best car accident lawyer",
+        "keyword_relationship": "semantic_match",
+        "monthly_searches": 9900,
+        "cpc_usd": 178.1,
+        "search_location": "United States",
+        "source": "Semrush",
+        "checked_date": "2026-08-27"
+      },
+      "brandable_data": {
+        "enabled": false
+      }
+    },
+    "companyinspector.com": {
+      "domain": "companyinspector.com",
+      "domain_type": "brandable",
+      "estimated_value": {
+        "amount_usd": 1586,
+        "source": "AffiliateMarketingDude GoDaddy Appraisal Tool",
+        "checked_date": "2026-08-27"
+      },
+      "keyword_data": {
+        "primary_keyword": null,
+        "keyword_relationship": null,
+        "monthly_searches": null,
+        "cpc_usd": null,
+        "search_location": "United States",
+        "source": null,
+        "checked_date": null
+      },
+      "brandable_data": {
+        "enabled": true,
+        "extension": ".com",
+        "character_length": 16,
+        "word_count": 2,
+        "contains_hyphen": false,
+        "contains_number": false
+      }
+    },
+    "dentalimplantsservice.com": {
+      "domain": "dentalimplantsservice.com",
+      "domain_type": "keyword",
+      "estimated_value": {
+        "amount_usd": 2250,
+        "source": "AffiliateMarketingDude GoDaddy Appraisal Tool",
+        "checked_date": "2026-08-27"
+      },
+      "keyword_data": {
+        "primary_keyword": "dental implant services",
+        "keyword_relationship": "near_exact",
+        "monthly_searches": 720,
+        "cpc_usd": 13.93,
+        "search_location": "United States",
+        "source": "Semrush",
+        "checked_date": "2026-08-27"
+      },
+      "brandable_data": {
+        "enabled": false
+      }
+    },
+    "digitately.com": {
+      "domain": "digitately.com",
+      "domain_type": "brandable",
+      "estimated_value": {
+        "amount_usd": 1720,
+        "source": "AffiliateMarketingDude GoDaddy Appraisal Tool",
+        "checked_date": "2026-08-27"
+      },
+      "keyword_data": {
+        "primary_keyword": null,
+        "keyword_relationship": null,
+        "monthly_searches": null,
+        "cpc_usd": null,
+        "search_location": "United States",
+        "source": null,
+        "checked_date": null
+      },
+      "brandable_data": {
+        "enabled": true,
+        "extension": ".com",
+        "character_length": 10,
+        "word_count": 1,
+        "contains_hyphen": false,
+        "contains_number": false
+      }
+    },
+    "poolcleanermiami.com": {
+      "domain": "poolcleanermiami.com",
+      "domain_type": "geo_service",
+      "estimated_value": {
+        "amount_usd": 871,
+        "source": "AffiliateMarketingDude GoDaddy Appraisal Tool",
+        "checked_date": "2026-08-27"
+      },
+      "keyword_data": {
+        "primary_keyword": "pool cleaning miami",
+        "keyword_relationship": "near_exact",
+        "monthly_searches": 110,
+        "cpc_usd": 3.26,
+        "search_location": "United States",
+        "source": "Semrush",
+        "checked_date": "2026-08-27"
+      },
+      "brandable_data": {
+        "enabled": false
+      }
+    }
+  }
+}

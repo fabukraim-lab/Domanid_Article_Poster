@@ -1,0 +1,412 @@
+{
+  "schema_version": 1,
+  "source": "domanid_domain_intelligence",
+  "domains": {
+    "digitately.com": {
+      "schema_version": 1,
+      "domain": "digitately.com",
+      "classification": {
+        "domain_type": "Brandable Domain",
+        "category": "Technology",
+        "search_intent": "Brand-led",
+        "commercial_intent": "Medium",
+        "confidence": 91
+      },
+      "structure": {
+        "extension": ".com",
+        "character_length": 10,
+        "word_count": 1,
+        "contains_hyphen": false,
+        "contains_number": false,
+        "geo_relevance": "None detected",
+        "domain_without_extension": "digitately",
+        "pronunciation_difficulty": "Easy",
+        "spelling_difficulty": "Easy"
+      },
+      "keywords": {
+        "primary_keyword": null,
+        "supporting_keywords": [],
+        "relationship": "Not Applicable",
+        "confidence": 0
+      },
+      "ai_scores": {
+        "brandability": {
+          "score": 94,
+          "reason": "Modern, coined adverbial tech brand."
+        },
+        "commercial_strength": {
+          "score": 83,
+          "reason": "Strong flexibility across software and digital-service niches."
+        },
+        "memorability": {
+          "score": 89,
+          "reason": "Distinctive and easy to remember."
+        },
+        "clarity": {
+          "score": 81,
+          "reason": "Evokes digital technology without narrow category lock-in."
+        },
+        "seo_relevance": {
+          "score": 45,
+          "reason": "Brandable asset rather than a generic search keyword."
+        },
+        "ppc_relevance": {
+          "score": 65,
+          "reason": "Suitable as a branded advertising destination."
+        },
+        "overall_strength": {
+          "score": 84,
+          "reason": "Strong modern brandability and broad commercial utility."
+        },
+        "buyer_fit": {
+          "score": 86,
+          "reason": "Potential fit for startups and digital businesses."
+        }
+      },
+      "ai_ad_analysis": {
+        "ppc_relevance": "Brand-Led (Direct Branding)",
+        "advertiser_likelihood": "Moderate (Brand-Led)",
+        "keyword_commerciality": "Brand Coining / Not Keyword Dependent",
+        "local_search_relevance": "Global / Non-Geographic",
+        "likely_paid_search_usefulness": "Useful primarily as a branded advertising destination.",
+        "marketing_value_interpretation": "Commercial value is primarily brand-led rather than search-volume-led."
+      },
+      "buyer_intelligence": {
+        "target_industries": [
+          "SaaS & Cloud Software",
+          "Digital Transformation Consultancies",
+          "AI & Automation Startups"
+        ],
+        "potential_buyers": [
+          "Software startups",
+          "Digital consulting firms",
+          "Marketing agencies"
+        ],
+        "buyer_use_cases": [
+          "SaaS platform",
+          "AI automation product",
+          "Digital agency"
+        ]
+      },
+      "sales_content": {
+        "sales_headline": "A Modern .com Brand for Technology and SaaS",
+        "short_sales_summary": "Digitately.com is a distinctive brandable .com for modern digital businesses.",
+        "why_this_domain": [
+          "Distinctive brand identity with broad technology relevance."
+        ],
+        "commercial_advantages": [
+          "Brandable",
+          "Memorable",
+          "Flexible commercial positioning"
+        ],
+        "potential_uses": [
+          "SaaS",
+          "AI tools",
+          "Digital services"
+        ],
+        "ideal_buyers": [
+          "Technology startups",
+          "Digital agencies"
+        ],
+        "marketing_advantage": "Provides a distinctive branded destination for digital marketing.",
+        "seo_and_ppc_context": "Best treated as a branded asset rather than a keyword-volume domain.",
+        "final_sales_positioning": "A flexible technology-oriented .com brand."
+      },
+      "strengths": [
+        {
+          "title": "Brandability",
+          "explanation": "Distinctive modern name."
+        }
+      ],
+      "risks_or_limitations": [
+        {
+          "title": "No Generic Search Demand",
+          "explanation": "Value depends primarily on branding rather than exact-match search traffic."
+        }
+      ],
+      "best_fit": "Technology startups and digital businesses.",
+      "commercial_positioning": "Modern brandable technology domain.",
+      "intelligence_type": "ai_analysis"
+    },
+    "poolcleanermiami.com": {
+      "schema_version": 1,
+      "domain": "poolcleanermiami.com",
+      "classification": {
+        "domain_type": "Geo-Service Domain",
+        "category": "Home Services",
+        "search_intent": "Local Commercial",
+        "commercial_intent": "Very High",
+        "confidence": 96
+      },
+      "structure": {
+        "extension": ".com",
+        "character_length": 17,
+        "word_count": 3,
+        "contains_hyphen": false,
+        "contains_number": false,
+        "geo_relevance": "Miami (Geographic cue detected)"
+      },
+      "keywords": {
+        "primary_keyword": "pool cleaning miami",
+        "supporting_keywords": [
+          "pool cleaner miami",
+          "miami pool cleaning",
+          "pool service miami",
+          "pool maintenance miami"
+        ],
+        "relationship": "Near Exact Match",
+        "confidence": 95
+      },
+      "ai_scores": {
+        "brandability": {
+          "score": 72,
+          "reason": "Hyper-focused geo-service brand that establishes immediate local market leadership."
+        },
+        "commercial_strength": {
+          "score": 93,
+          "reason": "Miami represents one of the dense pool ownership markets globally with year-round recurring service demand."
+        },
+        "memorability": {
+          "score": 90,
+          "reason": "Natural, easy-to-remember phrasing matching exactly what local pool owners search for."
+        },
+        "clarity": {
+          "score": 100,
+          "reason": "Zero ambiguity regarding the service offering and geographic market."
+        },
+        "seo_relevance": {
+          "score": 96,
+          "reason": "Exact combination of high-intent local service category and major metropolitan market."
+        },
+        "ppc_relevance": {
+          "score": 95,
+          "reason": "Superb quality score alignment for geo-targeted Google Ads campaigns in the Miami-Dade market."
+        },
+        "overall_strength": {
+          "score": 90,
+          "reason": "Prime geo-service asset for one of the highest-value residential pool maintenance markets in the country."
+        },
+        "buyer_fit": {
+          "score": 87,
+          "reason": "High demand from local pool service contractors, regional service aggregators, and home service franchises."
+        }
+      },
+      "buyer_intelligence": {
+        "target_industries": [
+          "Residential & Commercial Pool Maintenance",
+          "South Florida Home Services Franchises",
+          "Local Home Service Lead Generation",
+          "Pool Equipment & Renovation Contractors"
+        ],
+        "potential_buyers": [
+          "Expanding pool maintenance companies operating in Miami-Dade County",
+          "Regional home services roll-up aggregators seeking regional lead assets",
+          "Local service lead-generation operators monetizing inbound homeowner calls",
+          "Established contractors rebranding for digital dominance in Miami"
+        ],
+        "buyer_use_cases": [
+          "Primary online brand and booking engine for a Miami pool service company",
+          "Dedicated landing domain for hyper-targeted local Google Local Services and PPC ads",
+          "Local referral portal connecting Miami homeowners with certified pool technicians",
+          "Fleet vehicle and direct mail advertising domain with instant memorability"
+        ]
+      },
+      "sales_content": {
+        "sales_headline": "The Definitive Digital Asset for Dominating Miami Pool Service Acquisition",
+        "short_sales_summary": "PoolCleanerMiami.com provides an unbeatable geo-targeted identity for residential and commercial pool service operators in the year-round South Florida market.",
+        "why_this_domain": [
+          "Miami is one of the highest per-capita residential swimming pool markets in the world, requiring continuous, year-round maintenance and chemical balancing. PoolCleanerMiami.com captures this intent directly at the moment of consumer need.",
+          "Whether deployed as a primary operating brand, a dedicated local PPC landing portal, or featured on service vehicle wraps, the domain delivers immediate clarity and local credibility."
+        ],
+        "commercial_advantages": [
+          "Instant geographic and service authority in a premier warm-weather pool market",
+          "Unmatched brand recall for local radio, van wraps, and yard signs",
+          "High alignment with high-intent local mobile search queries",
+          "Direct path to recurring residential and commercial service contracts"
+        ],
+        "potential_uses": [
+          "Primary digital presence for a fast-growing Miami pool maintenance business",
+          "Dedicated local paid search landing page for maximum ad relevance",
+          "Lead capture portal generating pre-qualified pool service estimates",
+          "Regional booking platform for a home services franchise network"
+        ],
+        "ideal_buyers": [
+          "Miami pool cleaning and maintenance company owners",
+          "South Florida home service platform consolidators",
+          "Lead generation agencies specializing in local trade contractors",
+          "Franchise operators expanding into the South Florida territory"
+        ],
+        "marketing_advantage": "In local service marketing, matching the consumer's geographic and service need in the domain creates immediate relevance, reinforcing local legitimacy in both digital ads and offline marketing.",
+        "seo_and_ppc_context": "Directly reflects the standard query syntax used by homeowners searching for local pool services in Miami. Provides ideal context for location-targeted marketing.",
+        "final_sales_positioning": "PoolCleanerMiami.com is a high-yield local commercial digital asset ready to deliver market authority and recurring customer acquisition in one of the nation’s top pool markets."
+      },
+      "strengths": [
+        {
+          "title": "Premier Geographic Market",
+          "explanation": "Miami has year-round pool cleaning demand with dense residential and hospitality installations."
+        },
+        {
+          "title": "Direct Service Intent",
+          "explanation": "Homeowners searching this phrasing are actively looking to hire a professional service provider."
+        },
+        {
+          "title": "Offline & Fleet Marketing Ready",
+          "explanation": "Intuitive for placement on work vehicles, uniforms, billboards, and local print promotions."
+        },
+        {
+          "title": "Zero Brand Confusion",
+          "explanation": "Tells prospective customers exactly what service is provided and where."
+        }
+      ],
+      "risks_or_limitations": [
+        {
+          "title": "Geographically Constrained",
+          "explanation": "Value is centered specifically on the Miami/South Florida market rather than a nationwide broad footprint."
+        }
+      ],
+      "intelligence_type": "ai_analysis"
+    },
+    "lawyerslegaladvice.com": {
+      "schema_version": 1,
+      "domain": "lawyerslegaladvice.com",
+      "classification": {
+        "domain_type": "Partial Match Keyword Domain",
+        "category": "Legal",
+        "search_intent": "Informational",
+        "commercial_intent": "Very High",
+        "confidence": 94
+      },
+      "structure": {
+        "extension": ".com",
+        "character_length": 20,
+        "word_count": 3,
+        "contains_hyphen": false,
+        "contains_number": false,
+        "geo_relevance": "None detected"
+      },
+      "keywords": {
+        "primary_keyword": "legal advice",
+        "supporting_keywords": [
+          "lawyer advice",
+          "legal help",
+          "online legal advice",
+          "lawyer consultation"
+        ],
+        "relationship": "Partial Match",
+        "confidence": 92
+      },
+      "ai_scores": {
+        "brandability": {
+          "score": 68,
+          "reason": "Descriptive and authoritative compound name, prioritizing clarity and trust over abstract branding."
+        },
+        "commercial_strength": {
+          "score": 92,
+          "reason": "Legal consultation and lawyer client acquisition are among the highest commercial value niches."
+        },
+        "memorability": {
+          "score": 84,
+          "reason": "Combines universally understood legal terms into a logical, intuitive sequence."
+        },
+        "clarity": {
+          "score": 98,
+          "reason": "Instantly conveys the exact service and content purpose to both consumers and search engines."
+        },
+        "seo_relevance": {
+          "score": 95,
+          "reason": "Contains primary high-intent legal keywords that align naturally with user search queries."
+        },
+        "ppc_relevance": {
+          "score": 94,
+          "reason": "High relevance as a display URL and landing page domain for high-CPC Google Search ad groups."
+        },
+        "overall_strength": {
+          "score": 89,
+          "reason": "Exceptional commercial intent and keyword clarity in a lucrative vertical."
+        },
+        "buyer_fit": {
+          "score": 88,
+          "reason": "Sought after by lead-generation networks, multi-practice law firms, and legal tech directories."
+        }
+      },
+      "buyer_intelligence": {
+        "target_industries": [
+          "Legal Services & Law Firms",
+          "Legal Lead Generation Networks",
+          "Legal Tech & Online Advice Platforms",
+          "Legal Content & Directory Publishers"
+        ],
+        "potential_buyers": [
+          "National law firm networks seeking authority lead capture assets",
+          "Legal referral and lead distribution services",
+          "Legal tech startups providing on-demand attorney consultations",
+          "Specialist digital publishing and consumer legal education groups"
+        ],
+        "buyer_use_cases": [
+          "Consumer legal advice portal and direct lead intake funnel",
+          "National directory of verified attorneys offering consultation services",
+          "Dedicated landing domain for paid legal search marketing campaigns",
+          "Educational legal content hub monetized via lawyer directory placements"
+        ]
+      },
+      "sales_content": {
+        "sales_headline": "The Authoritative Brand for Legal Consultation and Client Intake Funnels",
+        "short_sales_summary": "LawyersLegalAdvice.com is an authoritative, high-intent .com domain combining two primary legal search concepts into a trustworthy, instant-credibility digital asset.",
+        "why_this_domain": [
+          "In the ultra-competitive legal sector, trust and immediate comprehension are essential for converting prospective clients. LawyersLegalAdvice.com delivers immediate authority, communicating exact intent to prospective clients before they even click.",
+          "The name combines primary legal terms in standard spelling on the gold-standard .com extension, making it ideal for national lead generation networks, attorney directories, or legal tech platforms."
+        ],
+        "commercial_advantages": [
+          "Direct alignment with high-intent legal advisory queries",
+          "Instant credibility and consumer trust across all legal practice areas",
+          "Ideal display URL for paid search and retargeting campaigns",
+          "Universal recognition on the premier global .com extension"
+        ],
+        "potential_uses": [
+          "Nationwide attorney matching and client consultation platform",
+          "High-converting PPC landing portal for legal lead generation",
+          "Authoritative consumer legal guides and Q&A resource",
+          "Brand asset for a multi-state legal advisory consortium"
+        ],
+        "ideal_buyers": [
+          "Legal lead generation enterprises",
+          "Regional and national law firm marketing consortiums",
+          "Online legal advisory and consultation software providers",
+          "Digital media publishers focusing on legal consumer topics"
+        ],
+        "marketing_advantage": "A descriptive, high-authority domain name can improve consumer perception and trust during paid search and display ad interactions, potentially supporting improved click-through rates and brand retention over time.",
+        "seo_and_ppc_context": "Contains organic semantic keywords central to consumer legal searches. While search rankings depend on multiple technical factors, a natural keyword domain provides strong conceptual relevance for targeted marketing.",
+        "final_sales_positioning": "LawyersLegalAdvice.com represents a premier turnkey digital asset for any organization seeking to capture consumer legal consultation demand and establish an authoritative nationwide footprint."
+      },
+      "strengths": [
+        {
+          "title": "High-Value Commercial Category",
+          "explanation": "The legal services industry commands high client acquisition values, making relevant domain assets strategically significant."
+        },
+        {
+          "title": "Clear Keyword Alignment",
+          "explanation": "Combines two core search concepts (lawyers and legal advice) in natural English word order."
+        },
+        {
+          "title": "Category Authority & Trust",
+          "explanation": "Instills confidence for consumers actively searching for legal guidance in stressful circumstances."
+        },
+        {
+          "title": "Universal .com Standard",
+          "explanation": "The .com extension provides global legitimacy and minimizes lost traffic from direct browser navigation."
+        }
+      ],
+      "risks_or_limitations": [
+        {
+          "title": "Descriptive Rather Than Abstract",
+          "explanation": "Better suited for lead generation, directories, or direct service funnels than an abstract lifestyle consumer brand."
+        },
+        {
+          "title": "Character Length (20 chars)",
+          "explanation": "Three-word compound is longer than single-word generics, though each component word is commonly spelled."
+        }
+      ],
+      "intelligence_type": "ai_analysis"
+    }
+  }
+}

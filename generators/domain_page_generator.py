@@ -30,6 +30,11 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_FILE = PROJECT_ROOT / "data" / "domains.json"
+MARKET_DATA_FILE = (
+    PROJECT_ROOT
+    / "data"
+    / "domain_market_data.json"
+)
 DOMAINS_DIR = PROJECT_ROOT / "domains"
 
 SITE_URL = "https://domanid.com"
@@ -536,14 +541,316 @@ def load_domains() -> list[dict[str, Any]]:
     return domains
 
 
+def load_domain_market_data() -> dict[str, dict[str, Any]]:
+    """
+    Load verified/reference market data for Premium domains.
+
+    The market-data store is separate from domains.json.
+    Missing market data is valid and must not prevent normal
+    domain-page generation.
+    """
+
+    if not MARKET_DATA_FILE.exists():
+        return {}
+
+    with MARKET_DATA_FILE.open(
+        "r",
+        encoding="utf-8",
+    ) as file:
+        payload = json.load(file)
+
+    records = payload.get(
+        "domains",
+        {},
+    )
+
+    if not isinstance(
+        records,
+        dict,
+    ):
+        raise RuntimeError(
+            "domain_market_data.json does not contain "
+            "a valid 'domains' object."
+        )
+
+    normalized: dict[str, dict[str, Any]] = {}
+
+    for domain_name, record in records.items():
+        if not isinstance(
+            record,
+            dict,
+        ):
+            continue
+
+        key = clean_text(
+            domain_name
+        ).lower()
+
+        if not key:
+            continue
+
+        normalized[key] = record
+
+    return normalized
+
+
 # ============================================================
 # HTML
 # ============================================================
 
 
+def build_market_data_html(
+    market_data: dict[str, Any] | None,
+) -> str:
+    """
+    Render market and valuation data for a Premium domain.
+
+    Rules:
+    - Returns an empty string when no market data exists.
+    - Estimated Value is a reference appraisal, not a sale price.
+    - Keyword metrics are rendered only when stored.
+    - Brandable domains use objective structural attributes.
+    - No AI scores or AI-derived claims are rendered.
+    """
+
+    if not isinstance(
+        market_data,
+        dict,
+    ):
+        return ""
+
+    estimated = market_data.get(
+        "estimated_value",
+        {},
+    )
+
+    keyword_data = market_data.get(
+        "keyword_data",
+        {},
+    )
+
+    brandable_data = market_data.get(
+        "brandable_data",
+        {},
+    )
+
+    domain_type = clean_text(
+        market_data.get(
+            "domain_type"
+        )
+    )
+
+    amount = None
+
+    if isinstance(
+        estimated,
+        dict,
+    ):
+        amount = estimated.get(
+            "amount_usd"
+        )
+
+    items: list[tuple[str, str]] = []
+
+    if isinstance(
+        amount,
+        (int, float),
+    ):
+        items.append(
+            (
+                "Estimated Value",
+                f"${amount:,.0f}",
+            )
+        )
+
+    if isinstance(
+        keyword_data,
+        dict,
+    ):
+        primary_keyword = clean_text(
+            keyword_data.get(
+                "primary_keyword"
+            )
+        )
+
+        monthly_searches = keyword_data.get(
+            "monthly_searches"
+        )
+
+        cpc = keyword_data.get(
+            "cpc_usd"
+        )
+
+        if primary_keyword:
+            items.append(
+                (
+                    "Primary Keyword",
+                    primary_keyword,
+                )
+            )
+
+        if isinstance(
+            monthly_searches,
+            (int, float),
+        ):
+            items.append(
+                (
+                    "US Monthly Search Volume",
+                    f"{monthly_searches:,.0f}",
+                )
+            )
+
+        if isinstance(
+            cpc,
+            (int, float),
+        ):
+            items.append(
+                (
+                    "CPC",
+                    f"${cpc:,.2f}",
+                )
+            )
+
+    if (
+        domain_type == "brandable"
+        and isinstance(
+            brandable_data,
+            dict,
+        )
+        and brandable_data.get(
+            "enabled"
+        ) is True
+    ):
+        extension = clean_text(
+            brandable_data.get(
+                "extension"
+            )
+        )
+
+        character_length = brandable_data.get(
+            "character_length"
+        )
+
+        word_count = brandable_data.get(
+            "word_count"
+        )
+
+        contains_hyphen = brandable_data.get(
+            "contains_hyphen"
+        )
+
+        contains_number = brandable_data.get(
+            "contains_number"
+        )
+
+        if extension:
+            items.append(
+                (
+                    "Extension",
+                    extension,
+                )
+            )
+
+        if isinstance(
+            character_length,
+            int,
+        ):
+            items.append(
+                (
+                    "Character Length",
+                    str(character_length),
+                )
+            )
+
+        if isinstance(
+            word_count,
+            int,
+        ):
+            items.append(
+                (
+                    "Word Count",
+                    str(word_count),
+                )
+            )
+
+        if contains_hyphen is False:
+            items.append(
+                (
+                    "Hyphens",
+                    "None",
+                )
+            )
+
+        if contains_number is False:
+            items.append(
+                (
+                    "Numbers",
+                    "None",
+                )
+            )
+
+    if not items:
+        return ""
+
+    market_grid_type = (
+        "brandable"
+        if domain_type == "brandable"
+        else "keyword"
+    )
+
+    items_html = "\n".join(
+        f"""
+                <div class="commercial-info-item">
+                    <span class="commercial-info-label">
+                        {escape(label)}
+                    </span>
+
+                    <strong class="commercial-info-value">
+                        {escape(value)}
+                    </strong>
+                </div>
+        """
+        for label, value in items
+    )
+
+    return f"""
+        <section
+            class="domain-content-section commercial-intelligence-section"
+        >
+            <div class="commercial-section-heading">
+                <div>
+                    <span class="commercial-eyebrow">
+                        Market Data
+                    </span>
+
+                    <h2>
+                        Market &amp; Valuation Data
+                    </h2>
+                </div>
+
+                <span class="commercial-analysis-badge">
+                    Premium Domain
+                </span>
+            </div>
+
+            <p class="commercial-intelligence-note">
+                Market indicators and reference valuation data
+                for this Premium domain. Estimated Value is a
+                reference appraisal and does not represent the
+                final sale price.
+            </p>
+
+            <div class="commercial-info-grid commercial-info-grid--{market_grid_type}">
+                {items_html}
+            </div>
+        </section>
+    """
+
+
 def render_domain_page(
     domain: dict[str, Any],
     all_domains: list[dict[str, Any]],
+    market_data: dict[str, Any] | None = None,
 ) -> str:
     name = clean_text(domain["domain"])
     slug = clean_text(domain["slug"])
@@ -591,6 +898,12 @@ def render_domain_page(
     standout_html = "\n".join(
         f"<li>{escape(point)}</li>"
         for point in build_standout_points(domain)
+    )
+
+    commercial_intelligence_html = (
+        build_market_data_html(
+            market_data
+        )
     )
 
     related_domains = find_related_domains(
@@ -770,7 +1083,7 @@ def render_domain_page(
 
     <link
         rel="stylesheet"
-        href="../../style.css?v=12"
+        href="../../style.css?v=13"
     >
 
 </head>
@@ -925,6 +1238,8 @@ def render_domain_page(
 
             </section>
 
+            {commercial_intelligence_html}
+
             <section class="domain-content-section">
 
                 <h2>
@@ -1071,6 +1386,7 @@ def render_domain_page(
 def generate_domain_page(
     domain: dict[str, Any],
     all_domains: list[dict[str, Any]],
+    market_data: dict[str, Any] | None = None,
 ) -> Path:
     slug = clean_text(domain["slug"])
 
@@ -1091,6 +1407,7 @@ def generate_domain_page(
     rendered = render_domain_page(
         domain,
         all_domains,
+        market_data,
     )
 
     # Normalize generated HTML before writing.
@@ -1152,6 +1469,7 @@ def main() -> int:
 
     try:
         domains = load_domains()
+        market_data_map = load_domain_market_data()
 
         active_domains = [
             domain
@@ -1182,9 +1500,23 @@ def main() -> int:
         generated_files: list[Path] = []
 
         for domain in active_domains:
+            domain_name = clean_text(
+                domain.get("domain", "")
+            ).lower()
+
+            domain_market_data = None
+
+            if bool(
+                domain.get("premium", False)
+            ):
+                domain_market_data = market_data_map.get(
+                    domain_name
+                )
+
             output_file = generate_domain_page(
                 domain,
                 domains,
+                domain_market_data,
             )
 
             generated_files.append(
