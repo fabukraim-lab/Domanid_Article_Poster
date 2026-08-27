@@ -36,6 +36,10 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>https://domanid.com/articles/monetizing-your-domain-name-beyond-website.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://domanid.com/articles/simplify-customer-journey-domain-easy-access.html</loc>
     <priority>0.6</priority>
   </url>
@@ -760,22 +764,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://domanid.com/domains/attorneyauto-com/</loc>
-    <priority>0.8</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://domanid.com/domains/bestdeodorants-com/</loc>
-    <priority>0.8</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
     <loc>https://domanid.com/domains/bestlawyercaraccident-com/</loc>
-    <priority>0.8</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://domanid.com/domains/clinicvictoria-com/</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
@@ -795,17 +784,17 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://domanid.com/domains/flowershopboston-com/</loc>
-    <priority>0.8</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://domanid.com/domains/lawyerslegaladvice-com/</loc>
-    <priority>0.8</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
     <loc>https://domanid.com/domains/poolcleanermiami-com/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://domanid.com/domains/attorneyauto-com/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://domanid.com/domains/bestdeodorants-com/</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
@@ -830,7 +819,17 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>https://domanid.com/domains/clinicvictoria-com/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>https://domanid.com/domains/createproposal-com/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://domanid.com/domains/flowershopboston-com/</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
@@ -846,6 +845,11 @@
   </url>
   <url>
     <loc>https://domanid.com/domains/lawyeremploymentdiscrimination-com/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://domanid.com/domains/lawyerslegaladvice-com/</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
