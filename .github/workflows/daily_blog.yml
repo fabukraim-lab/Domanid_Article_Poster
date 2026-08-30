@@ -48,8 +48,19 @@ jobs:
 
         if git diff --staged --quiet; then
           echo "No site changes detected."
-          exit 0
+        else
+          git commit -m "Daily DomanID site sync"
+          git push
         fi
 
-        git commit -m "Daily DomanID site sync"
-        git push
+    - name: Finalize Published Article
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        DOMANID_PUBLISH_STATE: /tmp/domanid_publish.json
+      run: |
+        if [ -f /tmp/domanid_publish.json ]; then
+          python finalize_blog_publish.py
+        else
+          echo "No article publication requires finalization."
+        fi

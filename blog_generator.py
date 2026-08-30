@@ -21,7 +21,49 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "").strip() or None
 
 TEMPLATE_PATH = "article_template.html"
 ARTICLES_DIR = "articles"
+
 INDEX_PATH = os.path.join(ARTICLES_DIR, "index.html")
+
+PUBLISH_STATE_FILE = os.environ.get(
+    "DOMANID_PUBLISH_STATE",
+    "/tmp/domanid_publish.json",
+)
+
+
+def write_publish_state(article, sheet_row):
+    """
+    Hand publication metadata to the workflow finalizer.
+
+    This function deliberately does NOT update Google Sheets
+    and does NOT send a publication-success notification.
+    """
+    state = {
+        "title": article["title"],
+        "slug": article["slug"],
+        "date": article["date"],
+        "category": article["category"],
+        "sheet_row": sheet_row,
+    }
+
+    state_path = os.path.abspath(PUBLISH_STATE_FILE)
+    state_dir = os.path.dirname(state_path)
+
+    if state_dir:
+        os.makedirs(state_dir, exist_ok=True)
+
+    with open(state_path, "w", encoding="utf-8") as f:
+        json.dump(
+            state,
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
+
+    print(
+        "[PASS] Publication state prepared:",
+        state_path,
+    )
+
 
 def fetch_csv_data(url):
     try:
@@ -524,6 +566,7 @@ def main():
         csv_rows = list(csv_data)
         articles_data = []
         found_any = False
+        generated_new_article = False
         sheet_row = -1
 
         # 0. Build full posted articles list FIRST (for related articles context)
@@ -550,18 +593,48 @@ def main():
 
             if status == "pending":
                 print(f"Found pending article: {row[0]}")
-                art = generate_article(row, template, all_posted_articles)
+
+                sheet_row = i + 1
+                pending_slug = row[1].strip()
+
+                expected_filepath = os.path.join(
+                    ARTICLES_DIR,
+                    f"{pending_slug}.html",
+                )
+
+                if os.path.exists(expected_filepath):
+                    print(
+                        "[RECOVERY] Pending article file already exists:",
+                        expected_filepath,
+                    )
+
+                    art = {
+                        "title": row[0],
+                        "slug": pending_slug,
+                        "category": row[2],
+                        "date": row[3],
+                        "excerpt": row[5],
+                    }
+
+                else:
+                    art = generate_article(
+                        row,
+                        template,
+                        all_posted_articles,
+                    )
+
+                    if art:
+                        generated_new_article = True
+
                 if art:
                     articles_data.append(art)
                     all_posted_articles.append(art)
 
-                    if APPS_SCRIPT_URL:
-                        sheet_row = i + 1
-                        try:
-                            resp = requests.get(f"{APPS_SCRIPT_URL}?row={sheet_row}&status=posted", timeout=30)
-                            print(f"Status update response: {resp.text}")
-                        except Exception as e:
-                            print(f"Error updating status: {e}")
+                    write_publish_state(
+                        art,
+                        sheet_row,
+                    )
+
                     found_any = True
                     break
 
@@ -588,21 +661,31 @@ def main():
             update_index(all_posted_articles)
 
         # 3. Re-inject related articles into the new article with full list
-        if articles_data:
+        if articles_data and generated_new_article:
             new_art = articles_data[-1]
-            inject_related_into_article(new_art["slug"], all_posted_articles)
+            inject_related_into_article(
+                new_art["slug"],
+                all_posted_articles,
+            )
 
         if articles_data:
             art = articles_data[-1]
-            msg = (
-                f"✅ <b>Article Published Successfully</b>\n\n"
-                f"📄 <b>{art['title']}</b>\n"
-                f"📅 {art['date']}  |  📂 {art['category']}\n"
-                f"🔗 https://domanid.com/articles/{art['slug']}.html"
+
+            print(
+                "[INFO] Article prepared for deployment:",
+                art["slug"],
             )
-            send_telegram_message(msg)
+
+            print(
+                "[INFO] Final Sheet status and Telegram success "
+                "notification are deferred until public HTTP 200."
+            )
+
         else:
-            send_telegram_message("✅ <b>Blog Check Complete</b>\nNo pending articles to publish.")
+            send_telegram_message(
+                "Blog Check Complete - "
+                "No pending articles to publish."
+            )
 
     except Exception as e:
         print("--- CRITICAL ERROR ---")
