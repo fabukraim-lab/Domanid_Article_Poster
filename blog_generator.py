@@ -85,6 +85,47 @@ def fetch_csv_data(url):
         print(f"Error fetching CSV: {e}")
         return None
 
+def normalize_internal_links(content):
+    """
+    Normalize known legacy DomanID internal URLs before
+    article content is written to HTML.
+
+    Google Sheets may contain older internal routes that no
+    longer exist on the current site. Keep this normalization
+    centralized so current and future articles cannot publish
+    those obsolete links.
+    """
+    replacements = {
+        # Legacy marketplace routes
+        "/domain-marketplace": "/domains/",
+        "/browse-premium-domains": "/domains/",
+        "/premium-domain-marketplace": "/domains/",
+
+        # Legacy search/tool routes
+        "/domain-search": "/domains/",
+        "/domain-search-tool": "/domains/",
+
+        # Legacy service/consultation routes
+        "/domain-acquisition-services": "/domains/",
+        "/domain-consultation": "/domains/",
+        "/domain-consultation-services": "/domains/",
+    }
+
+    original = content
+
+    # Replace longer routes first so overlapping legacy paths
+    # cannot partially rewrite one another.
+    for old in sorted(replacements, key=len, reverse=True):
+        content = content.replace(old, replacements[old])
+
+    if content != original:
+        print(
+            "[INFO] Legacy internal article links normalized."
+        )
+
+    return content
+
+
 def reading_time(text):
     words = len(text.split())
     mins = max(1, round(words / 200))
@@ -171,6 +212,10 @@ def generate_article(row, template, all_articles=None):
         return None
 
     title, slug, category, date, author, excerpt, content, keywords = row[:8]
+
+    # Normalize obsolete internal routes coming from FullContent
+    # before any article HTML processing or template rendering.
+    content = normalize_internal_links(content)
 
     image = "https://images.pexels.com/photos/160107/pexels-photo-160107.jpeg" # Default
     if len(row) >= 9 and row[8].strip():
