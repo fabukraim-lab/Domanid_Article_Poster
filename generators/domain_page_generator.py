@@ -197,6 +197,8 @@ def infer_domain_category(
         ],
         "home_services": [
             "pool cleaner",
+            "pool cleaning",
+            "pool service",
             "floor",
             "tiling",
             "window tint",
@@ -339,8 +341,8 @@ def build_standout_points(
 
     category_points = {
         "legal": [
-            "Strong relevance for legal-service searches",
-            "Useful for high-intent client acquisition",
+            "Clear relevance to legal services",
+            "Suitable for focused legal-service marketing",
         ],
         "travel": [
             "Clear relevance to travel and hospitality",
@@ -348,11 +350,11 @@ def build_standout_points(
         ],
         "health": [
             "Clear healthcare service positioning",
-            "Suitable for patient acquisition campaigns",
+            "Suitable for specialized healthcare marketing",
         ],
         "insurance": [
-            "Commercial insurance search relevance",
-            "Useful for quote and lead-generation funnels",
+            "Clear relevance to the insurance market",
+            "Suitable for quote or lead-generation projects",
         ],
         "real_estate": [
             "Strong property-related positioning",
@@ -363,11 +365,11 @@ def build_standout_points(
             "Suitable for service and lead-generation campaigns",
         ],
         "home_services": [
-            "Strong local-service positioning",
-            "Suitable for local SEO and paid advertising",
+            "Clear local-service positioning",
+            "Suitable for geographically focused marketing",
         ],
         "ecommerce": [
-            "Product-focused commercial intent",
+            "Clear product or commerce positioning",
             "Suitable for e-commerce and affiliate projects",
         ],
         "finance": [
@@ -477,8 +479,8 @@ def build_about_paragraphs(
         ),
         "home_services": (
             f"{name} can provide a clear identity for a specialized "
-            "service business and may be particularly useful for local "
-            "search visibility and customer acquisition."
+            "service business and may suit a local company, service "
+            "website, lead-generation project, or advertising campaign."
         ),
         "ecommerce": (
             f"{name} has commercial potential for an online store, "
@@ -502,9 +504,9 @@ def build_about_paragraphs(
     }
 
     second = (
-        "A well-matched domain can improve brand recall, make marketing "
-        "messages easier to communicate, and provide a dedicated address "
-        "for search, advertising, social media, and direct navigation."
+        "A well-matched domain can support clear brand positioning and "
+        "provide a dedicated address for websites, advertising, social "
+        "media, email, and other digital marketing channels."
     )
 
     return [
@@ -792,6 +794,105 @@ def build_market_data_html(
     if not items:
         return ""
 
+    source_notes: list[str] = []
+
+    if isinstance(
+        estimated,
+        dict,
+    ):
+        valuation_source = clean_text(
+            estimated.get(
+                "source"
+            )
+        )
+
+        valuation_checked = clean_text(
+            estimated.get(
+                "checked_date"
+            )
+        )
+
+        valuation_bits = []
+
+        if valuation_source:
+            valuation_bits.append(
+                f"Valuation source: {valuation_source}"
+            )
+
+        if valuation_checked:
+            valuation_bits.append(
+                f"Checked: {valuation_checked}"
+            )
+
+        if valuation_bits:
+            source_notes.append(
+                " | ".join(
+                    valuation_bits
+                )
+            )
+
+    if isinstance(
+        keyword_data,
+        dict,
+    ):
+        keyword_source = clean_text(
+            keyword_data.get(
+                "source"
+            )
+        )
+
+        keyword_location = clean_text(
+            keyword_data.get(
+                "search_location"
+            )
+        )
+
+        keyword_checked = clean_text(
+            keyword_data.get(
+                "checked_date"
+            )
+        )
+
+        keyword_bits = []
+
+        if keyword_source:
+            keyword_bits.append(
+                f"Keyword data source: {keyword_source}"
+            )
+
+        if keyword_location:
+            keyword_bits.append(
+                f"Market: {keyword_location}"
+            )
+
+        if keyword_checked:
+            keyword_bits.append(
+                f"Checked: {keyword_checked}"
+            )
+
+        if keyword_source and keyword_bits:
+            source_notes.append(
+                " | ".join(
+                    keyword_bits
+                )
+            )
+
+    source_notes_html = ""
+
+    if source_notes:
+        source_notes_html = (
+            '<div class="commercial-source-notes">'
+            + "".join(
+                f"""
+                <p class="commercial-source-note">
+                    {escape(note)}
+                </p>
+                """
+                for note in source_notes
+            )
+            + "</div>"
+        )
+
     market_grid_type = (
         "brandable"
         if domain_type == "brandable"
@@ -843,6 +944,8 @@ def build_market_data_html(
             <div class="commercial-info-grid commercial-info-grid--{market_grid_type}">
                 {items_html}
             </div>
+
+            {source_notes_html}
         </section>
     """
 
@@ -941,7 +1044,7 @@ def render_domain_page(
             target="_blank"
             rel="noopener noreferrer sponsored"
         >
-            View Domain Listing
+            Buy This Domain
         </a>
         """
 
@@ -1196,6 +1299,11 @@ def render_domain_page(
 
             {buy_button}
 
+            <p class="domain-cta-trust">
+                Secure purchase through the domain's official
+                sales landing page.
+            </p>
+
         </section>
 
         <div class="domain-content">
@@ -1266,11 +1374,17 @@ def render_domain_page(
                 </h2>
 
                 <p>
-                    View the domain listing and acquisition
-                    details.
+                    Ready to acquire this domain? Open the
+                    official sales landing page to review
+                    purchase options and complete the transaction.
                 </p>
 
                 {buy_button}
+
+                <p class="domain-cta-trust">
+                    Purchase is completed through the domain's
+                    secure sales landing page.
+                </p>
 
                 <br>
 
